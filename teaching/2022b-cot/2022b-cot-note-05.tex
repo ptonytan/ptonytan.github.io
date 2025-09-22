@@ -1,0 +1,361 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{5}
+\renewcommand{\lessontitle}{Alternating Turing machines}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+\externaldocument{../lesson-02/2021b-toc-note-02}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} The notion of alternating Turing machine,
+the relation with deterministic Turing machine and the polynomial hierarchy.
+
+
+%\vspace{0.5cm}
+
+\section{Definition}
+\label{sec:def-atm}
+
+A 1-tape {\em alternating Turing machine} (ATM) is a system
+$\cM =\langle \Sigma,\Gamma, Q,U,q_0,\qacc,\qrej,\delta\rangle$,
+where each component is as follows.
+\begin{itemize}
+\item
+$\Sigma =\{0,1\}$ and $\Gamma=\{0,1,\blank\}$
+are the input and tape alphabets, respectively.
+\item
+$Q$ is a finite set of states.
+\item
+$U\subseteq Q$ is a finite subset of $Q$.
+\item
+$q_0,\qacc,\qrej$ are the initial state, accepting state and rejecting state, respectively.
+\item
+$\delta \subseteq (Q- \{\qacc,\qrej\})\times \Gamma \times Q\times \Gamma\times \{\Left,\Right\}$. 
+\end{itemize}
+Note that ATM is very much like NTM, except that it has one extra component $U$.
+The states in $U$ are called {\em universal} states,
+and the states in $Q- U$ are called {\em existential} states.
+
+The notions of {\em initial/halting/accepting/rejecting} configuration are defined similarly as in NTM/DTM.
+A configuration $C$ is called {\em existential}/{\em universal} configuration,
+if the the state in $C$ is an existential/universal state.
+The notion of ``one step computation'' $C\vdash C'$ for ATM is also similar to the one for DTM/NTM.
+When $C\vdash C'$, we say that $C'$ is one of the next configuration of $C$ (w.r.t. $\cM$).
+
+On input word $w$, {\em the run of $\cM$ on $w$} is a {\em tree} $T$ where each node in the tree is labelled with a configuration of $\cM$
+according to the following rules.
+\begin{itemize}
+\item
+The root node of $T$ is labelled with the initial configuration of $\cM$ on $w$.
+\item
+Every other node $x$ in $T$ is labelled as follows.
+
+If $x$ is labelled with a configuration $C$
+and $C_1,\ldots,C_n$ are all the next configurations of $C$,
+then $x$ has $n$ children $y_1,\ldots,y_n$ labelled with $C_1,\ldots,C_n$, respectively.
+\end{itemize}
+Note that if $x$ is labelled with $C$ that does not have next configuration, 
+then it is a leaf node, i.e., it does not have any children.
+
+Let $T$ be the run of $\cM$ on $w$
+and let $x$ be a node in $T$.
+We say that {\em $x$ leads to acceptance}, if the following holds.
+\begin{itemize}
+\item
+$x$ is a leaf node labelled with an accepting configuration.
+\item
+If $x$ is labelled with an existential configuration, 
+then one of its children leads to acceptance.
+\item
+If $x$ is labelled with a universal configuration, 
+then all of its children lead to acceptance.
+\end{itemize}
+We say that $T$ is {\em accepting run}, if its root node leads to acceptance.
+The ATM $\cM$ accepts $w$, if the run of $\cM$ on $w$ is accepting run.
+As before, $L(\cM)\defeq \{w : \cM \ \text{accepts}\ w\}$.
+
+Note that NTM is simply ATM where all the states are existential,
+and DTM is simply NTM where every configuration (except the accepting/rejecting configuration)
+has exactly one next configuration.
+The generalization of ATM to multiple tapes is straightforward.
+
+\section{Time and space complexity for ATM}
+
+
+Let $\cM$ be a ATM, $w\in \Sigma^*$, $t\in \bbN$ and let $f:\bbN\to\bbN$ be a function.
+\begin{itemize}
+\item 
+{\em $\cM$ decides $w$ in time~$t$ (or, in $t$ steps)},
+if the run of $\cM$ on $w$ has depth at most $t$.
+\item
+{\em $\cM$ decides $w$ in space~$t$ (or, uses $t$ cells/space)},
+if in the run of $\cM$ on $w$,
+every node is labelled with configuration of length $t$.
+\item
+{\em $\cM$ runs in time/space $O(f(n))$}, if 
+there is $c>0$ such that for sufficiently long word $w$,
+$\cM$ decides $w$ in time/space $c\cdot f(|w|)$.
+
+\item
+{\em $\cM$ decides a language $L$ in time/space $O(f(n))$},
+if $\cM$ runs in time/space~$O(f(n))$ and $L(\cM)=L$.
+\item
+$\atime[f(n)] \defeq 
+\{L  :  \text{there is ATM}\ \cM \ \text{that decides} \ L \ \text{in time} \ O(f(n))\}$.
+\item
+$\aspace[f(n)] \defeq 
+\{L  :  \text{there is ATM}\ \cM \ \text{that decides} \ L \ \text{in space} \ O(f(n))\}$.
+\end{itemize}
+Analoguous to the DTM/NTM,
+we can define the classes of languages accepted by ATM run in algorithmic/polynomial/exponential time/space. 
+\begin{eqnarray*}
+\als & \defeq & \{L : \text{there is ATM} \ \cM \ \text{that decides}\ L \ \text{in space} \ O(\log n)\}
+\\
+\apt & \defeq & \bigcup_{f(n)=\poly(n)} \ \atime[f(n)]
+\\
+\aps & \defeq & \bigcup_{f(n)=\poly(n)} \ \aspace[f(n)]
+\\
+\aexpt & \defeq & \bigcup_{f(n)=\poly(n)} \ \atime[2^{f(n)}]
+\end{eqnarray*}
+The following lemma links time/space complexity classes for ATM with those for DTM.
+
+\begin{lemma}
+\label{lemma:atm-dtm}
+Let $T:\bbN\to\bbN$ and $S:\bbN\to\bbN$ such that $T(n)\geq n$ and $S(n)\geq \log n$, for every $n$.
+\begin{enumerate}[(a)]
+\item
+$\atime[T(n)]\subseteq \dspace[T(n)]$.
+\item
+$\dspace[S(n)]\subseteq \atime [S(n)^2]$.
+\item
+$\aspace[S(n)]\subseteq \dtime [2^{O(S(n))}]$.
+\item
+$\dtime[T(n)]\subseteq \aspace [\log T(n)]$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) and (c) is by straightforward simulation of ATM with DTM.
+(b) is similar to the proof of Savitch's theorem.
+(d) is similar to the proof of Theorem~\ref{theo:circuit-eval} below,
+i.e., by viewing the computation of DTM as a boolean circuit.
+\end{proof}
+
+
+\begin{theorem}
+\label{theo:alternation}
+{\bf (Chandra, Kozen, Stockmeyer 1981)}
+\begin{itemize}
+\item 
+$\als=\pt$.
+\item
+$\apt=\ps$.
+\item
+$\aps=\expt$.
+\item
+$\aexpt=\exps$.
+\item
+$\cdots$.
+\end{itemize}
+\end{theorem}
+
+
+\section{The polynomial hierarchy}
+
+For every integer $i\geq 1$, the class $\sigmap {i}$ is defined as follows.
+A language $L \subseteq \{0,1\}^*$ is in $\sigmap {i}$,
+if there is a polynomial $q(n)$ and a polynomial time DTM $\cM$
+such that for every $w\in \{0,1\}^*$,
+$w\in L$ if and only if the following holds.
+\begin{eqnarray}
+\label{eq:sigmap}
+& 
+\exists y_1 \in \{0,1\}^{q(|w|)}\ 
+\forall y_2 \in \{0,1\}^{q(|w|)}\
+\cdots \
+Q y_i \in \{0,1\}^{q(|w|)}\
+\cM \ \text{accepts}\ (w,y_1,\ldots,y_i) 
+&
+\end{eqnarray}
+where $Q = \exists$, if $i$ is odd and $Q=\forall$, if $i$ is even.
+
+
+The class $\pip {i}$ is defined as above, but the sequence of quantifiers in~(\ref{eq:sigmap}) starts with $\forall$.
+Alternatively, it can also be defined as
+$\pip {i} \defeq \{\overline{L} : L \in \sigmap {i}\}$.
+Note that $\npt = \sigmap {1}$ and $\conpt = \pip {1}$.
+
+\begin{remark}
+The class $\sigmap {i}$ can also be defined as follows.
+A language $L$ is in $\sigmap {i}$, if there is a polynomial time ATM $\cM$ that decides $L$ such that
+for every input word $w\in \{0,1\}^*$,
+the run of $\cM$ on $w$ can be divided into $i$ layers.
+Each layer consists of nodes of the same depth in the run.
+(Recall that the run of an ATM is a tree.)
+In the first layer all nodes are labeled with existential configurations,
+in the second layer with universal configurations, and so on.
+It is not difficult to show that this definition is equivalent to the one above.
+\end{remark}
+
+The {\em polynomial time hierarchy} (or, in short, {\em polynomial hierarchy}) is defined as the following class.
+\begin{eqnarray*}
+\pht & \defeq & \bigcup_{i=1}^{\infty} \ \sigmap {i}
+\end{eqnarray*}
+Note that $\pht \subseteq \ps$.
+
+It is conjectured that 
+$\sigmap {1}\ \subsetneq\ \sigmap {2}\ \subsetneq\ \sigmap {3} \ \subsetneq \ \cdots$.
+In this case, we say that {\em the polynomial hierarchy does not collapse}.
+We say that {\em the polynomial hierarchy collapses},
+if there is $i$ such that $\pht = \sigmap {i}$,
+in which case we also say that {\em the polynomial hierarchy collapses to level $i$}.
+
+
+We define the notion of hardness and completeness for each $\sigmap {i}$ as follows. 
+For $i\geq 1$, a language $K$ is {\em $\sigmap {i}$-hard}, if for every $L \in \sigmap {i}$, $L \leq_p K$. 
+It is {\em $\sigmap {i}$-complete}, if it is in $\sigmap {i}$ and it is $\sigmap {i}$-hard. 
+The same notion can be defined analogously for $\pht$ and each $\pip {i}$.
+
+
+Define the language $\sigmasat {i}$ as consisting of true QBF of the form:
+\begin{eqnarray*}
+& & \exists \vx_1 \ \forall \vx_2 \ \cdots \ Q \vx_i\ \varphi(\vx_1,\ldots,\vx_i)
+\end{eqnarray*}
+where $\varphi(\vx_1,\ldots,\vx_i)$ is quantifier-free Boolean formula and $Q=\exists$, if $i$ is odd, and $Q=\forall$, if $i$ is even.
+Here $\vx_1,\ldots,\vx_i$ are all vectors of boolean variables.
+In other words, $\sigmasat {i}$ is a subset of $\tqbf$ where the number of quantifier alternation is limited to $(i-1)$.
+The language $\pisat {i}$ is defined analogously with the starting quantifiers being $\forall$.
+
+\begin{theorem}
+\label{theo:ph}~
+\begin{itemize}
+\item 
+For every $i\geq 1$,
+$\sigmasat {i}$ is $\sigmap {i}$-complete and $\pisat {i}$ is $\pip {i}$-complete.
+\item
+If $\sigmap {i} = \pip {i}$ for some $i\geq 1$, then the polynomial hierarchy collapses.
+\item
+If there is language that is $\pht$-complete, then the polynomial hierarchy collapses.
+\end{itemize}
+
+\end{theorem}
+
+
+
+\appendix
+
+\section*{Appendix}
+
+\section{$\pt$-complete languages}
+
+\paragraph*{Boolean circuits.}
+Let $n\in \bbN$, where $n\geq 1$.
+An $n$-input {\em Boolean circuit} $C$ is a directed acyclic graph with
+$n$ {\em source} vertices (i.e., vertices with no incoming edges) and 
+$1$ {\em sink} vertex (i.e., vertex with no outgoing edge).
+
+The source vertices are labelled with $x_1,\ldots,x_n$.
+The non-source vertices, called {\em gates},
+are labelled with one of $\wedge, \vee,\neg$.
+The vertices labelled with $\wedge$ and $\vee$ have two incoming edges,
+whereas the vertices labelled with $\neg$ have one incoming edge.
+The {\em size} of $C$, denoted by $|C|$, is the number of vertices in $C$.
+
+On input $w = x_1\cdots x_n$, where each $x_i \in \{0,1\}$,
+we write $C(w)$ to denote the output of $C$ on $w$,
+where $\wedge,\vee,\neg$ are interpreted as ``and,'' ``or'' and ``negation,'' respectively
+and $0$ and $1$ as $\myF$ and $\myT$, respectively.
+
+
+\paragraph*{(Boolean) straight line programs.}
+It is sometimes more convenient to view a boolean circuit a straight line program.
+The following is an example of straight line program,
+where the input is $w=x_1\cdots x_n$.
+\begin{center}
+\begin{tabular}{l}
+{\footnotesize 1:}\; $p_1 := x_1 \wedge x_3$.
+\\
+{\footnotesize 2:}\; $p_2 := \neg x_4$.
+\\
+{\footnotesize 3:}\; $p_3 := p_1 \vee p_2$.
+\\
+\vdots
+\\
+{\footnotesize $\ell$:}\; $p_{\ell} := p_{i} \wedge p_{j}$.
+\end{tabular}
+\end{center}
+Intuitively, straight line programs are programs without {\bf if} branch and {\bf while} loop,
+hence, the name ``straight line'' programs.
+It is assumed that such program always outputs the value in the variable in the last line.
+In our example above, it outputs the value of variable $p_{\ell}$.
+
+
+Define the following problem.
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\circuiteval$}
+\\
+\hline
+{\bf Input:}
+&
+An $n$ input boolean circuit $C$ and $w\in \{0,1\}^n$.
+\\
+{\bf Task:}
+&
+Output $C(w)$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+It can also be defined as the language $\circuiteval \defeq \{ (C,w) : C(w) = 1\}$.
+
+
+
+For our proof of Theorem~\ref{theo:circuit-eval} below, 
+it is also convenient to assume that vertices labelled with $\wedge$ and $\vee$
+can have more than 2 incoming edges.
+
+
+\begin{theorem}
+\label{theo:circuit-eval}
+$\circuiteval$ is $\pt$-complete via log-space reductions.
+\end{theorem}
+\begin{proof}
+Follows the reduction for the $\npt$-completeness of $\sat$.
+\end{proof}
+
+
+
+
+
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

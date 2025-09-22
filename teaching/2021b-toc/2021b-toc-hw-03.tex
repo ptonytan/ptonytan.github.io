@@ -1,0 +1,108 @@
+\documentclass[11pt, a4paper]{article}
+
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{0}
+\renewcommand{\lessontitle}{Homework 3}
+\renewcommand{\fulltitle}{\lessontitle}
+
+\renewcommand{\themycount}{1.\arabic{mycount}}
+
+\usepackage{xr}
+\externaldocument{../lesson-08/2021b-toc-note-08}
+%\usetikzlibrary{automata,positioning}
+%\tikzset{initial text={}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\begin{center}
+{\Large {\bf Due on Tuesday, 11:59 am, 30 May 2022 (111/05/30)}}
+\end{center}
+
+
+\paragraph*{Note:} There are 8 questions altogether.
+For Questions 1--3, we will use the following notation.
+For a function $g:\bbN\to\bbN$, let $\size(g)$ denote
+the class of languages such that $L \in \size(g)$ if and only if 
+$L$ is decided by a circuit family $\{C_n\}$ such that for sufficiently large $n$:
+\begin{eqnarray*}
+|C_n| & \leq & g(n)
+\end{eqnarray*}
+That is, there is $n'$ such that for every $n\geq n'$, $|C_n|\leq g(n)$.
+
+
+\paragraph*{Question 1.}
+\begin{enumerate}[(a)]
+\item 
+Show that every function $f:\{0,1\}^t\to\{0,1\}$
+can be computed by a circuit of size $\leq 3t2^t$.
+\item
+Show that for every $k\geq 1$, there is a language $L$ such that the following holds.
+\begin{enumerate}[(P1)]
+\item 
+$L \in \size(n^{k+1})$.
+\item
+For sufficiently large $n$, there is no circuit of size $\leq n^k$ that computes $L\cap\{0,1\}^n$.
+\end{enumerate}
+Conclude that for every $k\geq 1$, $\size(n^k)\subsetneq \size(n^{k+1})$.
+\end{enumerate}
+Hint for (b): We know that for every $t$, there is a function $f:\{0,1\}^t\to\{0,1\}$
+such that $f$ is not computable by circuit of size $2^t/(10t)$.
+Combine this with (a) for some appropriate value~$t$.
+
+\paragraph*{Question 2.}
+Prove that for every $k\geq 1$,
+there is a language $L \in \sigmap {4}$ that has properties (P1) and (P2) above.
+Then, conclude that for every $k\geq 1$, $\sigmap {4}\setminus \size(n^k) \neq \emptyset$.
+
+\vspace{0.2cm}
+\noindent
+Hint: Consider the language $L$ in Question 1. Then, for every $n$,
+consider the ``lexicographically first'' circuit $C_n$ of size $\leq n^{k+1}$
+that is not equivalent to any of the circuit of size $\leq n^k$.
+
+\paragraph*{Question 3.}
+Prove that for every $k\geq 1$,
+there is a language $L \in \sigmap {2} \setminus \size(n^k)$.
+
+
+
+\paragraph*{Question 4.}
+\begin{itemize}
+\item
+Let $\cH_{n,k}$ be a pairwise independent collection of hash functions $h:\{0,1\}^\to\{0,1\}^k$.
+Prove that for every $x\in \{0,1\}^n$, for every $y \in \{0,1\}^k$,
+$\prdist {h\in \cH_{n,k}} { h(x)=y }  =  2^{-k}$.
+\item
+Prove Theorem~\ref{theo:hash-exists-b}, i.e.,
+the collection $\cH_{n,n} \defeq \{h_{A,b} : A \in \{0,1\}^{n\times n}\ \text{and}\ b \in \{0,1\}^{n\times 1}\}$ 
+is pair-wise independent.
+\end{itemize}
+
+
+\paragraph*{Question 5.}
+Prove that $\class{MA}\subseteq \sigmap{2}$.
+
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

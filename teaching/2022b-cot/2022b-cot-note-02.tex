@@ -1,0 +1,651 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{2}
+\renewcommand{\lessontitle}{$\npt$-complete languages}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} The notion of $\npt$-completeness and $\conpt$-completeness.
+
+
+\section{Alternative definitions of the class $\npt$}
+\label{sec:def-np}
+
+
+Recall that for a string $w$, the length of $w$ is denoted by $|w|$.
+In the previous lesson, we define the class $\npt$ as follows.
+
+\begin{definition}
+\label{def:np-a}
+A language $L$ is in $\npt$ if 
+there is $f(n)=\poly(n)$ and an NTM $\cM$ such that $L(\cM)=L$ and 
+$\cM$ runs in time $O(f(n))$.
+\end{definition}
+
+Definition~\ref{def:np-b} below is an alternative definition of $\npt$.
+
+\begin{definition}
+\label{def:np-b}
+A language $L\subseteq \Sigma^*$ is in $\npt$ if
+there is a language $K \subseteq \Sigma^*\cdot\{\#\}\cdot\Sigma^*$,
+where $\#\notin \Sigma$, such that the following holds.
+\begin{itemize}
+\item
+For every $w\in \Sigma^*$,
+$w\in L$ if and only if there is $v\in\Sigma^*$ such that $w\# v\in K$.
+\item
+There is $f(n)=\poly(n)$ such that for every $w\# v \in K$,
+$|v|\leq f(|w|)$.
+\item
+The language $K$ is accepted by a polynomial time DTM.
+\end{itemize}
+For $w\# v\in K$, the string $v$ is called the {\em certificate/witness} for $w$.
+We call the language $K$ the {\em certificate/witness language} for $L$.
+\end{definition}
+
+
+
+Indeed Def.~\ref{def:np-a} and~\ref{def:np-b} are equivalent.
+That is,
+for every language $L$,
+$L$ is in $\npt$ in the sense of Def.~\ref{def:np-a}
+if and only if $L$ is in $\npt$ in the sense of Def.~\ref{def:np-b}.
+
+
+\section{$\npt$-complete languages}
+
+
+
+Recall that a DTM $\cM$ computes a function $F:\Sigma^*\to\Sigma^*$ in time $O(g(n))$, if
+there is a constant $c> 0$ such that
+on every word $w$, $\cM$ computes $F(w)$ in time $\leq cg(|w|)$.
+If $g(n)=\poly(n)$,
+such function $F$ is called {\em polynomial time computable} function.
+Moreover, if $\cM$ uses only logarithmic space,
+it is called {\em logarithmic space computable} function.
+See Appendix~\ref{app:sec:compute-function} for more details.
+
+The following definition is one of the most important definitions in computer science.
+
+
+\begin{definition}
+\label{def:reduction}
+A language $L_1$ is {\em polynomial time  reducible} to another language $L_2$,
+denoted by $L_1\leq_p L_2$,
+if there is a polynomial time computable function $F$ such that
+for every $w\in \Sigma^{*}$:
+\begin{eqnarray*}
+w\in L_1 & \text{if and only if} & F(w) \in L_2
+\end{eqnarray*}
+Such function $F$ is called polynomial time reduction, also known as {\em Karp reduction}.
+
+If $F$ is logarithmic space computable function,
+we say that $L_1$ is {\em log-space reducible} to $L_2$,
+denoted by $L_1\leq_{\log} L_2$.
+
+If $L_1$ and $L_2$ are in $\npt$ with certificate languages $K_1$ and $K_2$, respectively,
+we say that $F$ is {\em parsimonious}, if for every $w\in \Sigma^{\ast}$,
+$w$ has the same number of certificates in $K_1$ as $F(w)$ in $K_2$.
+\end{definition}
+
+
+
+
+\begin{definition}
+\label{def:np-complete}
+Let $L$ be a language.
+\begin{itemize}\itemsep=0pt
+\item 
+$L$ is {\em $\npt$-hard}, if
+for every $L' \in \npt$, $L' \leq_p L$.
+\item
+$L$ is {\em $\npt$-complete},
+if $L \in \npt$ and $L$ is $\npt$-hard.
+\end{itemize}
+\end{definition}
+
+
+Recall that a propositional formula (Boolean formula) with variables $x_1,\ldots,x_n$
+is in Conjunctive Normal Form (CNF), if
+it is of the form:
+$\bigwedge_{i}\  (\ell_{i,1}\ \vee \ \cdots \ \vee \ \ell_{i,k_i})$
+where each $\ell_{i,j}$ is a literal, i.e., a variable $x_k$ or its negation $\neg x_k$.
+It is in 3-CNF,
+if it is of the form
+$\bigwedge_{i}\ \big(\ell_{i,1} \ \vee \ \ell_{i,2} \ \vee \ \ell_{i,3}\big)$.
+A formula $\varphi$ is satisfiable, if there is an assignment of Boolean values $\myT$ or $\myF$
+to each variable in $\varphi$ that evaluates to $\myT$.
+
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\sat$}
+\\
+\hline
+\hline
+{\bf Input:}
+&
+A propositional formula $\varphi$ in CNF.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$\varphi$ is satisfiable.
+Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+$\sat$ can be viewed as a language, i.e.,
+$\sat \defeq \{\varphi : \varphi \ \text{is satisfiable CNF formula}\}$.
+
+
+\begin{theorem}
+\label{theo:sat-np-complete}
+{\bf (Cook 1971, Levin 1973)}
+$\sat$ is $\npt$-complete.
+\end{theorem}
+\begin{proof}
+We have to show that $\sat \in \npt$ and $\sat$ is $\npt$-hard.
+We first show that $\sat\in\npt$.
+Consider the following non-deterministic algorithm that decides $\sat$.
+On input formula $\varphi$, do the following.
+\begin{itemize}\itemsep=0pt
+\item
+Let $x_1,\ldots,x_n$ be the variables in $\varphi$.
+\item
+For each $i=1,\ldots,n$ do:
+\begin{itemize}\itemsep=0pt
+\item
+Non-deterministically assign the value of $x_i$ to either true or false.
+\end{itemize}
+\item
+Check if the formula $\varphi$ evaluates to true under the assignment.
+\item
+If the formula evaluates to $\myT$, then ACCEPT.
+
+If the formula evaluates to $\myF$, then REJECT.
+\end{itemize}
+It is not difficult to show that the algorithm above accepts a formula $\varphi$
+if and only if it is satisfiable.
+This completes the proof that $\sat \in \npt$.
+
+Now we show that $\sat$ is $\npt$-hard.
+That is, for every $L \in \npt$, $L \leq_p \sat$.
+
+Let $L\in \npt$.
+Let $\cM=\langle \Sigma,\Gamma,Q,q_0,\qacc,\qrej,\delta\rangle$ 
+be the NTM that decides $L$ in time $f(n)=\poly(n)$,
+where $\Sigma$ is the input alphabet, $\Gamma$ is the tape alphabet,
+$Q$ is the set of states, $q_0$ is the initial state,
+$\qacc$ is the accepting state,
+$\qrej$ is the rejecting state
+and $\delta$ is the set of transitions.
+We denote by $\blank$ the blank symbol.
+We may assume that $\cM$ has only 1 tape.
+
+We will describe a deterministic algorithm $\cA$ such that
+on every word $w$, it output a CNF formula $\varphi$ such that the following holds.
+\begin{align*}
+w\in L & \quad \text{if and only if}\quad \varphi \ \text{is satisfiable.}
+\end{align*} 
+Intuitively, $\varphi$ ``describes'' the accepting run of $\cM$ on $w$
+such that it is satisfiable if and only if there is an accepting run of $\cM$ on $w$.
+Let $n=|w|$. See Figure~\ref{fig:grid}.
+
+
+\begin{figure}
+
+
+\begin{tikzpicture}
+
+%%%% the tape
+\draw[internationalkleinblue,->] (0,1.5) -- (0,9);
+\draw[internationalkleinblue,->] (0,1.5) -- (12,1.5);
+
+\node[color=internationalkleinblue] at (12,1.75) {\footnotesize cell};
+\node[color=internationalkleinblue] at (0.5,9) {\footnotesize time};
+
+\draw[internationalkleinblue,dotted] (3,4) -- (5,4);
+\draw[internationalkleinblue,dotted] (3,5) -- (5,5);
+\draw[internationalkleinblue,dotted] (3,6) -- (5,6);
+
+\draw[internationalkleinblue,dotted] (3,4) -- (3,6);
+\draw[internationalkleinblue,dotted] (4,4) -- (4,6);
+\draw[internationalkleinblue,dotted] (5,4) -- (5,6);
+
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=below:{\color{cadmiumorange}\footnotesize $\ell_1$}] at (3,4)  {};
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=left:{\color{cadmiumorange}\footnotesize $\ell_2$}] at (3,5)  {};
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=above:{\color{cadmiumorange}\footnotesize $\ell_3$}] at (3,6)  {};
+
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=below:{\color{cadmiumorange}\footnotesize $\ell_4$}] at (4,4)  {};
+\node[circle,draw,inner sep=1.5pt,color=internationalkleinblue,fill,label=right:{\color{internationalkleinblue}\footnotesize $\ell$}] at (4,5)  {};
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=above:{\color{cadmiumorange}\footnotesize $\ell_8$}] at (4,6)  {};
+
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=below:{\color{cadmiumorange}\footnotesize $\ell_5$}] at (5,4)  {};
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=right:{\color{cadmiumorange}\footnotesize $\ell_6$}] at (5,5)  {};
+\node[circle,draw,inner sep=1.5pt,color=cadmiumorange,fill,label=above:{\color{cadmiumorange}\footnotesize $\ell_7$}] at (5,6)  {};
+
+
+\draw[internationalkleinblue,dotted] (0,5) -- (5,5);
+\node at (-1,5) {\footnotesize $1 \leq j\leq f(n)$};
+\draw[internationalkleinblue,dotted] (4,1.5) -- (4,6);
+\node at (4.25,1.25) {\footnotesize $1\leq i\leq f(n)$};
+\node[circle,draw,inner sep=1.5pt,color=internationalkleinblue,fill,label=above:{\color{internationalkleinblue}\footnotesize $(i,j)$}] at (4,5)  {};
+
+
+
+\end{tikzpicture}
+
+\caption{Each point $(i,j)$ is labeled with a symbol $\ell\in (Q\times \Gamma) \cup \Gamma$.
+If $\ell=(q,\sigma) \in Q\times \Gamma$, it means in time-$j$ the NTM $\cM$ is in state $q$
+and the head is in cell-$i$ reading symbol $\sigma$.
+If $\ell = \sigma \in \Gamma$, it means in time-$j$ the content of cell-$i$ is $\sigma$.
+The labels $\ell$ and those in the neighboring points $\ell_1,\ldots,\ell_8$ must
+obey the transitions in of the NTM $\cM$.}
+\label{fig:grid}
+
+\end{figure}
+
+To describe the run, it uses the following boolean variables
+for every $q\in Q$, for every $\sigma \in \Gamma$,
+for every $1\leq i,j \leq f(|w|)$:
+$$
+X_{q,\sigma,i,j} \qquad \text{and}\qquad X_{\sigma,i,j}
+$$
+Intuitively, $X_{q,\sigma,i,j}$ is true if and only if
+in step-$j$ the head is in cell-$i$ reading symbol $\sigma$ and the TM is in state $q$;
+and $X_{\sigma,i,j}$ is true if and only if
+in step-$j$ the content of cell-$i$ is $\sigma$.
+
+Essentially the formula $\varphi$ states the following.
+\begin{itemize}
+\item
+In time-1 the labels of the points $(1,1),\ldots,(1,f(n))$ is the initial configuration.
+It can be expressed as the following formula.
+\begin{equation}
+\label{eq:init}
+X_{q_0,a_1} \wedge X_{a_2} \wedge \cdots \wedge X_{a_n}
+\wedge \bigwedge_{i=n+1}^{f(n)} X_{\blank}
+\end{equation}
+\item 
+The accepting state must appear somewhere.
+It can be expressed as the following formula.
+\begin{equation}
+\label{eq:acc}
+\bigvee_{1\leq i,j \leq f(n)}\bigvee_{\sigma\in\Gamma} X_{\qacc,\sigma,i,j}
+\end{equation}
+\item 
+For every $1 \leq i,j \leq f(n)$, the labels in $(i-1,j),(i,j),(i+1,j+1)$
+and the labels in $(i-1,j+1),(i,j+1),(i+1,j+1)$ must obey the transitions in $\cM$.
+
+For example, if $(q,\sigma)\to (p,\alpha,\text{left})$ and $(q,\sigma)\to (r,\beta,\text{right})$
+are transitions in $\cM$, then the formula states the following.
+\begin{align}
+\nonumber
+&
+\bigwedge_{1\leq i,j \leq f(n)}\
+\bigwedge_{\sigma_1,\sigma_2,\sigma_3\in \Gamma}\
+X_{\sigma_1,i-1,j} \wedge X_{q,\sigma_2,i,j}\wedge X_{\sigma_3,i+1,j}
+\\
+\label{eq:transition}
+&
+\hspace{5cm} \to \
+\left(
+\begin{array}{c}
+(X_{p,\sigma_1,i-1,j+1} \wedge X_{\alpha,i,j+1} \wedge X_{\sigma_3,i+1,j+1})
+\\
+\vee 
+\\
+(X_{\sigma_1,i-1,j+1} \wedge X_{\beta,i,j+1} \wedge X_{r,\sigma_3,i+1,j+1})
+\end{array}
+\right)
+\end{align}
+
+\item 
+For every time $j$, there is exactly one $i$
+such that the label of $(i,j)$ is of the form $(q,\sigma)\in Q\times \Gamma$.
+It can be expressed as the following formula.
+\begin{align}
+\label{eq:at-most-one-head}
+&
+\bigwedge_{p,q\in Q\ \text{and}\ \sigma,\sigma'\in \Gamma}
+\bigwedge_{1\leq j \leq f(n)}
+\bigwedge_{1\leq i < i' \leq f(n)}
+\
+X_{q,\sigma,i,j} \to \neg X_{p,\sigma',i',j}
+\\
+\label{eq:at-least-one-head}
+\wedge \qquad
+&
+\bigwedge_{1\leq j \leq f(n)}
+\bigvee_{q\in \Sigma}\bigvee_{\sigma\in\Gamma}\bigvee_{1\leq i \leq f(n)}
+X_{q,\sigma,i,j}
+\end{align}
+The formula~(\ref{eq:at-most-one-head}) states that there is at most one head
+and the formula~(\ref{eq:at-least-one-head}) states that there is at least one head.
+\end{itemize}
+
+Formally, the algorithm $\cA$ works as follows.
+On input $w$, it outputs the formula $\varphi$ which is the conjunction of the 
+formulas~(\ref{eq:init})--~(\ref{eq:at-least-one-head}).
+It is not difficult to show that $w\in L$ if and only if $\varphi$ is satisfiable.
+\end{proof}
+
+
+\begin{remark}
+We note that in the proof of Theorem~\ref{theo:sat-np-complete},
+the formula $\varphi$ produced in the reduction from $L$ to $\sat$ satisfies the following.
+\begin{align*}
+\text{The number of accepting run of $\cM$ on $w$} & \ =\
+\text{The number of satisfying assignment of $\varphi$} 
+\end{align*}
+Thus, the reduction in Theorem~\ref{theo:sat-np-complete} is parsimonious.
+\end{remark}
+
+
+\begin{remark}
+There are two ways to show that a language $L$ is $\npt$-hard.
+\begin{itemize}
+\item
+The first is by definition, i.e., we show that for every language $K\in \npt$,
+there is a polynomial time reduction from $K$ to $L$.
+\item 
+The second is by choosing an appropriate $\npt$-hard language, say $\sat$,
+and show that there is a polynomial time reduction from $\sat$ to $L$.
+\end{itemize}
+\end{remark}
+
+
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\threesat$}
+\\
+\hline\hline
+{\bf Input:}
+&
+A propositional formula $\varphi$ in 3-CNF.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$\varphi$ is satisfiable.
+Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+Note that we can also view
+$\threesat$ as the language
+$\threesat \defeq \{\varphi : \varphi \ \text{is satisfiable 3-CNF formula}\}$.
+
+\begin{theorem}
+\label{theo:threesat-np-complete}
+$\threesat$ is $\npt$-complete.
+\end{theorem}
+\begin{proof}
+That is $\threesat$ is in $\npt$ follows immediately from Theorem~\ref{theo:sat-np-complete}.
+To show that it is $\npt$-hard, we reduce it from $\sat$.
+On input a CNF formula $\varphi$,
+if it has a clause of length greater than $3$:
+$$
+\ell_1 \vee \cdots \vee \ell_k
+\hspace{3cm}\text{where}\ k \geq 4
+$$
+split it into two clauses, where $z$ is a new variable:
+$$
+(\ell_1 \vee \cdots \vee \ell_{\lfloor k/2\rfloor}\vee z)\ \wedge\ 
+(\ell_{\lfloor k/2\rfloor+1}\vee \cdots \vee \ell_k \vee \neg z)
+$$
+Repeat it on each clause of length $\geq 4$ until we get 3-CNF.
+\end{proof}
+
+
+\section{More NP-complete problems}
+
+We need a few terminologies.
+Let $G=(V,E)$ be a (undirected) graph.
+\begin{itemize}\itemsep=0pt
+\item
+$G$ is $3$-colorable, if we can color the vertices in $G$
+with 3 colors (every vertex must be colored with one color)
+such that no two adjacent vertices have the same color.
+\item
+A set $C\subseteq V$ is a clique in $G$, if 
+every pair of vertices in $C$ are adjacent.
+\item
+A set $W\subseteq V$ is a vertex cover, if 
+every edge in $E$ is adjacent to at least one vertex in $W$.
+\item
+A set $I\subseteq V$ is independent, if 
+every pair of vertices in $I$ are non-adjacent.
+\item
+A set $D\subseteq V$ is dominating, if
+every vertex in $V$ is adjacent to at least one vertex in $D$.
+\end{itemize}
+All the following problems are $\npt$-complete.
+
+\vspace{0.3cm}
+\noindent
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\threecolor$}
+\\
+\hline\hline
+{\bf Input:}
+&
+A (undirected) graph $G=(V,E)$.
+\\
+{\bf Task:}
+&
+Output $\myT$, if $G$ is 3-colorable.
+Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+
+\vspace{0.6cm}
+\noindent
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\clique$}
+\\
+\hline\hline
+{\bf Input:}
+&
+A (undirected) graph $G=(V,E)$ and an integer $k\geq 0$ in binary form.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$G$ has a clique of size $\geq k$.
+Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+
+
+\vspace{0.6cm}
+\noindent
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\indset$}
+\\
+\hline\hline
+{\bf Input:}
+&
+A (undirected) graph $G=(V,E)$ and an integer $k\geq 0$ in binary form.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$G$ has an independent set of size $\geq k$.
+\\
+& Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+
+\vspace{0.6cm}
+\noindent
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\vertexcover$}
+\\
+\hline\hline
+{\bf Input:}
+&
+A (undirected) graph $G=(V,E)$ and an integer $k\geq 0$ in binary form.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$G$ has a vertex cover of size $\leq k$.
+Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+
+\vspace{0.6cm}
+\noindent
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\domset$}
+\\
+\hline\hline
+{\bf Input:}
+&
+A (undirected) graph $G=(V,E)$ and an integer $k\geq 0$ in binary form.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$G$ has an dominating set of size $\leq k$.
+\\
+& Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+
+
+\section{$\conpt$-complete problems}
+\label{app:sec:conp}
+
+Analogous to $\npt$-complete,
+we can also define $\conpt$-complete problems.
+\begin{definition}
+\label{def:conp-complete}
+Let $K$ be a language.
+\begin{itemize}
+\item 
+$K$ is {\em $\conpt$-hard}, if
+for every $L \in \conpt$, $L \leq_p K$.
+\item
+$K$ is {\em $\conpt$-complete},
+if $K \in \conpt$ and $K$ is $\conpt$-hard.
+\end{itemize}
+\end{definition}
+
+
+\begin{theorem}
+\label{theo:conp-complete}
+For every language $K$ over the alphabet $\Sigma$,
+$K$ is $\npt$-complete if and only if its complement $\overline{K}$ is $\conpt$-complete,
+where $\overline{K}\defeq\Sigma^*-K$.
+\end{theorem}
+
+\begin{corollary}
+\label{cor:unsat-conp-complete}
+$\overline{\sat}\defeq \{\varphi : \varphi \ \text{is not satisfiable}\}$ is $\conpt$-complete.
+\end{corollary}
+
+
+
+
+\appendix
+
+\section*{APPENDIX}
+
+\section{The notion of computable functions}
+\label{app:sec:compute-function}
+
+\paragraph*{Polynomial time computable functions.}
+Let $F:\Sigma^*\to \Sigma^*$ be a function from $\Sigma^*$ to $\Sigma^*$.
+Let $\cM$ be a 2-tape DTM.
+\begin{itemize}
+\item 
+{\em $\cM$ computes the function $F$}, 
+if $\cM$ accepts every word $w\in \Sigma^{\ast}$ and when it halts, 
+the content of its second tape is $F(w)$.
+\item 
+{\em $\cM$ computes $F$ in time $O(g(n))$},
+if there is a constant $c>0$ such that
+on every word $w$, $\cM$ decides $w$ in time $c\cdot g(|w|)$.
+\item 
+{\em $\cM$ computes $F$ in polynomial time},
+if $\cM$ computes $F$ in time $O(g(n))$ for some $g(n)=\poly(n)$.
+\item 
+{\em $F$ is computable in polynomial time},
+if there is a DTM $\cM$ that computes $F$ in polynomial time.
+\end{itemize}
+
+\paragraph*{Logarithmic space computable function.}
+A function $F:\Sigma^*\to\Sigma^*$ is computable in logarithmic space,
+if there is a 3-tape DTM $\cM$ and a constant $c$
+such that on every $w\in\Sigma^*$
+the following holds.
+\begin{itemize}
+\item
+$\cM$ accepts $w$.
+\item 
+$\cM$ never change the content of tape-1, i.e.,
+tape-1 always contains the input word $w$.
+
+In other words, tape-1 is ``read-only'' tape.
+\item 
+$\cM$ only uses at most $c \log |w|$ cells in tape-2.
+\item 
+Tape-3 is ``write-only'' tape, i.e., the head in tape-3 can only write and move right.
+\item 
+When $\cM$ halts, the content of tape-3 is $F(w)$.
+\end{itemize}
+
+
+ 
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

@@ -1,0 +1,326 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{3}
+\renewcommand{\lessontitle}{More on the class $\npt$}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+\externaldocument{../lesson-00/2020b-toc-note-00}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} Some classical results on the class $\npt$.
+
+
+\section{Ladner's theorem: $\npt$-intermediate language}
+\label{sec:ladner}
+
+\begin{theorem}
+\label{theo:ladner}
+{\bf (Ladner 1975)}
+If $\pt\neq \npt$,
+then there is $L\in \npt$ such that $L\notin \pt$
+and $L$ is not $\npt$-complete. 
+\end{theorem}
+
+For a function $f:\bbN\to \bbN$,
+we say that it is {\em polynomial time computable} (in unary representation),
+if there is a polynomial time algorithm that on input $1^n$, outputs $1^{f(n)}$.
+
+For a function $f:\bbN\to \bbN$,
+define $\sat_f$ as follows.
+\begin{eqnarray*}
+\sat_f & \defeq & \{\varphi0 \underbrace{1\cdots 1}_{n^{f(n)}} : \varphi \in \sat \ \text{and}\ |\varphi|=n\}
+\end{eqnarray*}
+
+
+We first prove the following lemma.
+\begin{lemma}
+\label{lem:ladner-a}
+Suppose $\npt\neq \pt$.
+If $h:\bbN\to\bbN$ is polynomial time computable (in unary representation),
+non-decreasing and unbounded, i.e., $\lim_{n\to\infty} h(n)=\infty$,
+then $\sat_h$ is not $\npt$-hard.
+\end{lemma}
+\begin{proof}
+Suppose to the contrary that $\sat_h$ is $\npt$-hard.
+Let $F$ be a polynomial time reduction from $\sat$ to $\sat_h$ that runs in time $cn^k$.
+Let $N$ be an integer such that for every $n\geq N$, the following holds.
+\begin{itemize}\itemsep=0pt
+\item
+$h(n)\geq 2k$. (This is possible because $h$ is non-decreasing and unbounded.)
+\item
+$cn^{1/2} < n$.
+\end{itemize}
+
+\begin{claim}
+\label{cl:ladner}
+For every $\varphi\in\sat$ with length at least $N$, the output of $F$ on $\varphi$,
+denoted by $F(\varphi) =\psi01^{|\psi|^{h(|\psi|)}}$, satisfies the following:
+If $|\psi|> N$, then $|\psi|<|\varphi|$.
+\end{claim}
+\begin{proof}(of claim)
+Since $F$ runs in $cn^k$ time, it follows that:
+\begin{eqnarray*}
+|\psi|^{h(|\psi|)} \quad < \quad
+|\psi| + 1 + |\psi|^{h(|\psi|)} & \leq & c |\varphi|^k
+\end{eqnarray*}
+Thus, 
+\begin{eqnarray*}
+|\psi| & < & c|\varphi|^{k/h(|\psi|)}
+\quad \leq \quad 
+c|\varphi|^{1/2}
+\quad < \quad
+|\varphi|
+\end{eqnarray*}
+The second and third inequalities come from the fact that $|\psi|,|\varphi|\geq N$.
+\end{proof}
+
+We now present a polynomial time algorithm for $\sat$, which contradicts the assumption that $\npt\neq \pt$.
+On input $\varphi$, do the following.
+\begin{itemize}
+\item
+If $|\varphi|\leq N$, check by brute force if it is satisfiable.
+Otherwise, continue.
+\item
+Run $F$ on $\varphi$, and let the output be $\psi01^m$, for some $m$.
+\item
+Check if $m=|\psi|^{h(|\psi|)}$ by doing the following.
+\begin{enumerate}\itemsep=0pt
+\item
+Let $\ell = h(1^{|\psi|})$. (Recall that $h$ is polynomial time computable.)
+\item
+Convert $|\psi|$ in its binary form and compute $|\psi|^{\ell}$ (in binary form).
+\item
+Then, compare it with $m$.
+\end{enumerate}
+\item
+If $m \neq |\psi|^{h(|\psi|)}$, then REJECT immediately.
+\item
+Suppose $m = |\psi|^{h(|\psi|)}$.
+
+If $|\psi|\leq N$, check if $\psi$ is satisfiable by brute force.
+
+If $|\psi|> N$, recursively call the algorithm on $\psi$. (Note that here $|\psi|< |\varphi|$.)
+
+\end{itemize}
+Each step in the algorithm takes polynomial time and the number of recursive call in this algorithm is at most $|\varphi|$.
+So, overall the algorithm runs in polynomial time.
+\end{proof}
+
+Next, consider the following lemma.
+\begin{lemma}
+\label{lem:ladner-b}
+Suppose $\npt\neq \pt$.
+If $h:\bbN\to\bbN$ is polynomial time computable (in unary representation)
+and bounded, i.e., there is a constant $c$ such that $h(n)\leq c$ for every $n$,
+then $\sat_h\notin\pt$.
+\end{lemma}
+\begin{proof}
+Suppose $\sat_h\in \pt$.
+We will show that $\sat\in \pt$, which contradicts the assumption that $\npt\neq \pt$.
+Consider the following algorithm.
+On input $\varphi$, do the following.
+\begin{itemize}\itemsep=0pt
+\item 
+Check if $\varphi01^{i} \in \sat_h$, for some $0\leq i \leq |\varphi|^c$.
+\item
+ACCEPT iff there is $i$ where $\varphi01^{i} \in \sat_h$.
+\end{itemize}
+\end{proof}
+
+Combined with Lemmas~\ref{lem:ladner-a} and~\ref{lem:ladner-b},
+the following lemma implies Ladner's theorem, i.e., $\sat_h$ is the desired intermediate $\npt$ language.
+\begin{lemma}
+\label{lem:ladner-c}
+Suppose $\npt\neq \pt$.
+There is a non-decreasing function $h:\bbN\to\bbN$ such that:
+\begin{itemize}\itemsep=0pt
+\item 
+$h$ is polynomial time computable (in unary representation).
+\item
+$\sat_h \in \npt$.
+\item
+$\sat_h \in \pt$ if and only if $h$ is bounded.
+\end{itemize}
+\end{lemma}
+
+
+The function $h$ for Lemma~\ref{lem:ladner-c}
+is defined as follow.
+For every $n\geq 1$, the value $h(n)$ is determined by {\bf Algorithm~1} below.
+Here $\cM_i$ is the DTM whose encoding is the binary representation of $i$.
+
+
+\begin{algorithm}
+\label{alg:ladner}
+\caption{\bf Algorithm~1}
+\begin{algorithmic}[1]
+\REQUIRE
+$1^n$, where $n\geq 1$.
+\ENSURE
+Compute $1^{h(n)}$.
+\FOR{$i=1,\ldots,\log\log (n)-1$}
+\STATE
+Let $\cM_i$ be the $i^{\text{th}}$ (1-tape) DTM.
+\FORALL{$x\in \{0,1\}^*$ where $|x|\leq \log n$}
+\STATE
+Compute $\sat_h(x)$ (i.e., recursively check if $x\in \sat_h$).
+\STATE
+Simulate $\cM_i$ on $x$ in $i|x|^i$ steps (using the UTM in Theorem~\ref{theo:utm}).
+\ENDFOR
+\IF{the results in lines 4 and 5 agree on all $x\in \{0,1\}^*$ where $|x| \leq \log n$}
+\RETURN $i$ (in unary).
+\ENDIF
+\ENDFOR
+\RETURN $\log\log n$ (in unary).
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
+
+\section{Limit of diagonalization}
+
+A TM $\cM$ with oracle access to a language $K$, denoted by $\cM^K$, 
+is a TM with a special tape called {\em oracle tape} and three special states $\qquery,\qyes,\qno$.
+Each time it is in $\qquery$,
+it moves to $\qyes$, if $w\in K$
+and to $\qno$, if $w\notin K$, where $w$ is the string found in the oracle tape.
+In other words, when it is in $\qquery$, the machine can ``query'' the membership of the language $K$. 
+Regardless of the choice of $K$, such query counts only as one step.
+We denote by $L(\cM^K)$ the language accepted by $\cM^K$.
+
+For a language $K$, we define the classes $\pt$ and $\npt$ relativized to $K$ as follows.
+\begin{eqnarray*}
+\pt^K &\defeq & \{L : \text{there is a polynomial time DTM}\ \cM^K \ \text{such that} \  L(\cM^K)=L\}
+\\
+\npt^K & \defeq & \{L : \text{there is a polynomial time NTM}\ \cM^K \ \text{such that} \  L(\cM^K)=L\}
+\end{eqnarray*}
+
+
+
+\begin{theorem}
+\label{theo:TM-oracle}
+{\bf (Baker, Gill, Solovay 1975)}
+There is language $A$ and $B$ such that $\pt^A=\npt^A$ and $\pt^B\neq \npt^B$. 
+\end{theorem}
+\begin{proof}
+For a $\ps$-complete language $A$,
+we can show that $\pt^A = \npt^A$.
+(We will show in Lesson 4 that $\ps$-complete languages exist.)
+
+To show the existence of $B$,
+we need the following notation.
+For a language $C\subseteq \{0,1\}^*$, define $\unary(C) \defeq \{1^n : \text{there is}\ w \in C \ \text{with length}\ n\}$.
+Obviously, for every $C\subseteq \{0,1\}^*$, $\unary(C)\in \npt^C$.
+
+The language $B$ will be defined as $B\defeq\bigcup_{i\in \bbN}B_i$ 
+where each $B_i$ is a finite set defined inductively as follows.
+Each $B_i$ is associated with an integer $k_i$ such that $B_i = B \cap \{0,1\}^{\leq k_i}$.
+Here $\{0,1\}^{\leq k_i}\defeq\{w \in \{0,1\}^* : |w|\leq k_i\}$.
+
+The base case is $B_0=\emptyset$ and $k_0=0$.
+For the induction step, $B_{i+1}$ is defined as follows,
+where we assume an enumeration of all oracle DTM $\cM_0,\cM_1,\ldots$.
+\begin{itemize}\itemsep=0pt
+\item 
+Let $n = k_i+1$.
+\item
+Simulate oracle TM $\cM_{i+1}$ on $1^n$ within $2^n/10$ steps.
+
+During the simulation $\cM_{i+1}$ may query the oracle.
+For the query strings with length $\leq k_i$, 
+the oracle answers are according to $B_i$.
+For the query strings with length $> k_i$, the oracle answers are ``no.''  
+\item
+Let $k_{i+1}$ be as follows.
+\begin{eqnarray*}
+k_{i+1} & \defeq & 
+\left\{
+\begin{array}{ll}
+n, & \text{if all the query strings has length}\ \leq k_i
+\\
+m, & m \ \text{is the maximal length of the query string with length} \ \geq n
+\end{array}
+\right.
+\end{eqnarray*}
+\item
+If $\cM_{i+1}$ accepts $1^n$ within $2^n/10$ steps,
+we set $B_{i+1}\defeq B_i$.
+\item
+If $\cM_{i+1}$ does not accept $1^n$ within $2^n/10$ steps,
+we set $B_{i+1}\defeq B_i \cup \{w\}$, where $w\in \{0,1\}^n$ and $w$ is not one of the query strings.
+\end{itemize}
+From the definition of $B$, 
+we can show that $\unary(B)\notin \pt^B$.
+\end{proof}
+
+
+\newpage
+\appendix
+
+
+\section*{APPENDIX}
+
+
+\section{Universal Turing machines}
+
+
+\begin{remark}
+For every $k$-tape TM $\cM$ over input alphabet $\Sigma=\{0,1\}$,
+there is a $k$-tape TM $\cM'$ over the same input alphabet $\Sigma =\{0,1\}$
+and tape alphabet $\Gamma=\{0,1,\blank\}$ such that
+$L(\cM)=L(\cM')$.
+Moreover, if $\cM$ runs in time/space $O(f(n))$, so does $\cM'$.
+
+Due to this, we always assume that the input and tape alphabet of Turing machines are 
+$\Sigma=\{0,1\}$ and $\Gamma =\{0,1,\blank\}$, respectively. 
+\end{remark}
+
+Recall that $\floor {\cM}$ denotes the encoding of a TM $\cM$.
+
+\begin{definition}
+\label{def:utm}
+A {\em Universal Turing machine} (UTM) is a $k$-tape DTM $\cU$, for some $k\geq 1$,
+such that $L(\cU) = \{\floor{\cM}\$w \mid \cM \ \text{accepts}\ w \ \text{and}\ w \in \{0,1\}^*\}$.
+\end{definition}
+
+\begin{theorem}
+\label{theo:utm}
+There is a UTM $\cU$ such that for every DTM $\cM$ and every word $w$,
+if $\cM$ decides $w$ in time $t$,
+then $\cU$ decides $\floor{\cM}\$w$ in time $(\alpha\cdot t\cdot \log t)$,
+where $\alpha$ does not depends $|w|$,
+but on size of the tape alphabet of $\cM$ as well as the number of tapes and states of $\cM$.
+\end{theorem}
+
+ 
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

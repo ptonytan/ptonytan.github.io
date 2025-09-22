@@ -1,0 +1,349 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{1}
+\renewcommand{\lessontitle}{Basic complexity classes}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} Review of some introductory material.
+
+\section{The big-Oh notations}
+
+Let $\bbN$ denote the set of natural numbers $\{0,1,2,\ldots\}$.
+Let $f$ and $g$ be functions from $\bbN$ to $\bbN$.
+\begin{itemize}
+\item
+$f= O(g)$ means that there is $c$ and $n_0$
+such that for every $n\geq n_0$, $f(n) \leq  c\cdot g(n)$.
+
+It is usually phrased as ``there is $c$
+such that for (all) sufficiently large $n$,'' $f(n)\leq c\cdot g(n)$.
+
+\item
+$f= \Omega(g)$ means $g=O(f)$.
+\item
+$f= \Theta(g)$ means $g=O(f)$ and $f=O(g)$.
+\item
+$f=o(g)$ means for every $c > 0$, $f(n)\leq c\cdot g(n)$ for sufficiently large $n$.
+
+Equivalently, $f=o(g)$ means $f=O(g)$ and $g\neq O(f)$. 
+
+Another equivalent definition is  $f=o(g)$ means $\lim_{n\to \infty} \frac{f(n)}{g(n)}=0$.
+
+\item
+$f=\omega(g)$ means $g=o(f)$.
+\end{itemize}
+To emphasize the input parameter, we will write $f(n)=O(g(n))$. 
+The same for the $\Omega, o, \omega$ notations.
+We also write $f(n)=\poly(n)$ to denote that $f(n)=c\cdot n^k$ for some $c$ and $k\geq 1$.
+
+
+Throughout the course, for an integer $n\geq 0$,
+we will denote by $\floor {n}$ the binary representation of $n$.
+Likewise, $\floor{G}$ the binary encoding of a graph $G$.
+In general, we write $\floor{X}$ to denote the encoding/representation of an object $X$
+as a binary string, i.e., a 0-1 string.
+To avoid clutter, we often write $X$ instead of $\floor {X}$.
+
+We usually use $\Sigma$ to denote a finite input alphabet. Often $\Sigma=\{0,1\}$.
+Recall also that for a word $w\in \Sigma^*$, $|w|$ denotes the length of $w$.
+For a DTM/NTM $\cM$, we write $L(\cM)$ to denote the language $\{w : \cM \ \text{accepts}\ w \}$.
+
+We often view a language $L\subseteq \Sigma^*$ as a boolean function,
+i.e., $L:\Sigma^*\to \{\myT,\myF\}$, where $L(x)=\myT$ if and only if $x\in L$,
+for every $x\in \Sigma^*$.
+
+\section{Time complexity}
+
+\begin{definition}
+\label{def:time}
+Let $\cM$ be a DTM/NTM, $w\in \Sigma^*$, $t\in \bbN$ and let $f:\bbN\to\bbN$ be a function.
+\begin{itemize}
+\item 
+{\em $\cM$ decides $w$ in time~$t$ (or, in $t$ steps)},
+if every run of $\cM$ on $w$ has length at most $t$.
+That is, for every run of $\cM$ on $w$:
+\begin{eqnarray*}
+C_0 \ \vdash \ C_1 \ \vdash \ \cdots \ \vdash \ C_m
+& & \hspace{1cm}\mbox{where} \ C_m \ \mbox{is a halting configuration,}
+\end{eqnarray*}
+we have $m \leq t$.
+
+\item
+{\em $\cM$ runs in time $O(f(n))$}, if 
+there is $c>0$ such that for sufficiently long word $w$,
+$\cM$ decides $w$ in time $c\cdot f(|w|)$.
+\item
+{\em $\cM$ decides/accepts a language $L$ in time $O(f(n))$},
+if $L(\cM)=L$ and $\cM$ runs in time~$O(f(n))$.
+\item
+$\dtime[f(n)] \defeq 
+\{L  :  \text{there is a DTM}\ \cM \ \text{that decides} \ L \ \text{in time} \ O(f(n))\}$.
+\item
+$\ntime[f(n)] \defeq 
+\{L  :  \text{there is an NTM}\ \cM \ \text{that decides} \ L \ \text{in time} \ O(f(n))\}$.
+\end{itemize}
+\end{definition}
+Note that Definition~\ref{def:time} applies in similar manner for both DTM and NTM.
+The only difference is that a DTM has one run for each input word $w$,
+whereas NTM can have many runs for each input word $w$.
+%
+%\newpage
+
+We say that $\cM$ runs in {\em polynomial} and {\em exponential time},
+if there is $f(n)=\poly(n)$ such that $\cM$ runs in time $O(f(n))$ and $O(2^{f(n)})$, respectively.
+In this case we also say that $\cM$ is a polynomial/exponential time TM.
+
+
+The following are some of the important classes in complexity theory.
+\begin{align*}
+\pt & \defeq \ \bigcup_{f(n)=\poly(n)} \ \dtime[f(n)]
+\\
+\npt & \defeq \ \bigcup_{f(n)=\poly(n)} \ \ntime[f(n)]
+\\
+\conpt & \defeq \ \{L  :  \Sigma^{\ast}-L \in \npt\}
+\\
+\expt & \defeq \ \bigcup_{f(n)=\poly(n)} \ \dtime[2^{f(n)}]
+\\
+\nexpt & \defeq \ \bigcup_{f(n)=\poly(n)} \ \ntime[2^{f(n)}]
+\\
+\conexpt  & \defeq \ \{L :  \Sigma^{\ast}-L \in \nexpt\}
+\end{align*}
+
+\begin{theorem}
+\label{theo:padding}
+{\bf (Padding theorem)}
+If $\npt=\pt$, then $\nexpt=\expt$. 
+
+Likewise, if $\npt=\conpt$, then $\nexpt=\conexpt$.
+\end{theorem}
+\begin{proof}
+We will only prove the first statement, i.e.,
+``if $\npt=\pt$, then $\nexpt=\expt$.''
+
+Suppose $\npt=\pt$.
+We will show that $\nexpt\subseteq \expt$.
+Let $L \in \nexpt$.
+Let $\cM$ be an NTM that decides $L$ in time $2^{p(n)}$,
+where $p(n)=\poly(n)$.
+Consider the following language:
+\begin{align*}
+L' & \defeq \ \{w0\underbrace{11\cdots 1}_{m} \ :\  w \in L \ \text{and}\ m = 2^{p(|w|)}\} 
+\end{align*}
+We will first show that $L' \in \npt$.
+Consider the following algorithm that we denote by Algorithm~1.
+
+\begin{algorithm}
+\label{alg:padding-algo-1}
+\caption{\bf Algorithm~1}
+\begin{algorithmic}[1]
+\REQUIRE
+$u \in \Sigma^*$.
+\ENSURE
+Decide if $u \in L'$.
+\STATE
+Check if $u$ is of the form $w0\underbrace{11\cdots 1}_{m}$ for some $m$.
+and that $m = 2^{p(|w|)}$. 
+
+If not, REJECT.
+Otherwise, continue.
+
+\STATE
+Run $\cM$ on $w$.
+\STATE
+ACCEPT if and only if $\cM$ accepts $w$.
+\end{algorithmic}
+\end{algorithm}
+
+Since $\cM$ is non-deterministic, Algorithm~1 is also non-deterministic.
+We can show that Algorithm~1 runs in polynomial time (in the length of the input $u$).
+Thus, $L'\in \npt$.
+By our assumption that $\npt=\pt$,
+we obtain that $L'\in \pt$.
+Let $\cM'$ be a DTM that decides $L'$ in polynomial time.
+
+To show that $L \in \expt$,
+consider the following algorithm that we denote by Algorithm~2.
+
+\begin{algorithm}
+\label{alg:padding-algo-2}
+\caption{\bf Algorithm~2}
+\begin{algorithmic}[1]
+\REQUIRE
+$w \in \Sigma^*$.
+\ENSURE
+Decide if $w \in L$.
+\STATE
+Compute $m \defeq 2^{p(|w|)}$.
+
+\STATE
+Run $\cM'$ on input $w 0 1^m$.
+\STATE
+ACCEPT if and only if $\cM$ accepts $w$.
+\end{algorithmic}
+\end{algorithm}
+
+Note that by the definition of $L'$,
+Algorithm~2 decides the language $L$.
+It is deterministic because $\cM'$ is deterministic.
+Moreover, it runs in exponential time in the length of the input word $w$.
+Therefore, $L \in \expt$, as desired.
+This completes the proof 
+that $\npt=\pt$ implies $\nexpt=\expt$. 
+\end{proof}
+
+
+\section{Space complexity}
+
+\begin{definition}
+\label{def:space}
+Let $\cM$ be a DTM/NTM, $w\in \Sigma^*$, $t\in \bbN$ and let $f:\bbN\to\bbN$ be a function.
+\begin{itemize}
+\item
+$\cM$ decides $w$ in $t$~space (or, using $t$ cells/space), 
+if for every run of $\cM$ on $w$:
+\begin{eqnarray*}
+C_0 \ \vdash \ C_1 \ \vdash \ \cdots \ \vdash \ C_N
+& & \hspace{1cm}\mbox{where} \ C_N \ \mbox{is an accepting/rejecting configuration,}
+\end{eqnarray*}
+the length $|C_i| \leq t$, for each $i=0,\ldots, N$.
+\item
+{\em $\cM$ uses $O(f(n))$ space}, if 
+there is $c>0$ such that for sufficiently long word $w$,
+$\cM$ decides $w$ using $c\cdot f(|w|)$ space.
+\item
+{\em $\cM$ decides/accepts a language $L$ in space $O(f(n))$},
+if $L(\cM)=L$ and $\cM$ uses $O(f(n))$ space.
+\item
+$\dspace[f(n)] \defeq 
+\{L  :  \text{there is a DTM}\ \cM \ \text{that decides} \ L \ \text{using} \ O(f(n))\ \text{space}\}$.
+\item
+$\nspace[f(n)] \defeq 
+\{L  :  \text{there is an NTM}\ \cM \ \text{that decides} \ L \ \text{using} \ O(f(n))\ \text{space}\}$.
+\end{itemize}
+\end{definition}
+
+Again, note that the notion of $\cM$ uses space $O(f(n))$ is the same for DTM and NTM.
+The only difference is that a DTM has only one run for each input word $w$,
+whereas NTM can have many runs for each input word $w$.
+In both cases, we can only say that $\cM$ uses space $O(f(n))$,
+if for each input word $w$, for every run of $\cM$ on $w$,
+the length of each configuration in the run is always $\leq c f(|w|)$.
+
+
+We say that $\cM$ uses {\em polynomial} and {\em exponential} space,
+if there is $f(n)=\poly(n)$ such that $\cM$ runs in time $O(f(n))$ and $O(2^{f(n)})$, respectively.
+In this case we also say that $\cM$ is a polynomial/exponential space TM.
+The following are some of the important classes in complexity theory.
+\begin{align*}
+\ps & \defeq \ \bigcup_{f(n)=\poly(n)} \ \dspace[f(n)]
+\\
+\exps & \defeq \ \bigcup_{f(n)=\poly(n)} \ \dspace[2^{f(n)}]
+\end{align*}
+
+
+
+
+\section{Logarithmic space complexity}
+
+Another interesting classes are $\ls$ and $\nls$.
+We say that a language $L$ is in $\ls$, if
+there is a $2$-tape DTM $\cM$ that decides $L$ and a constant $c>0$ such that
+for every input word $w$:
+\begin{itemize}\itemsep=0pt
+\item
+The first tape always contains only the input word $w$, i.e.,
+$\cM$ \underline{never} changes the content of the first tape.
+\item
+$\cM$ uses $ c\cdot \log(|w|)$ space in its second tape.
+\end{itemize}
+Likewise, we say that a language $L$ is in $\nls$, if
+there is a $2$-tape NTM $\cM$ that decides $L$ such that
+the above two conditions are satisfied.
+
+\section{Some classic complexity results}
+
+Obviously, we have 
+$\ls \subseteq \nls$,
+$\pt \subseteq \npt$, and
+$\ps \subseteq \nps$.
+
+\begin{proposition}~
+\begin{itemize}\itemsep=0pt
+\item
+$\ls \subseteq \pt$.
+\item
+$\npt \subseteq \ps$.
+\end{itemize}
+\end{proposition}
+
+{\em Deterministic/non-deterministic time/space hierarchy theorem} states that
+for every $k\geq 1$, the following holds.
+\begin{eqnarray*}
+\dtime [n^k]  \subsetneq  \dtime [n^{k+1}]
+& \qquad\qquad\qquad\qquad &
+\dspace [n^k]  \subsetneq  \dspace [n^{k+1}]
+\\
+\ntime [n^k]  \subsetneq  \ntime [n^{k+1}]
+& \qquad\qquad &
+\nspace [n^k]  \subsetneq  \nspace [n^{k+1}]
+\end{eqnarray*}
+Some classic results in complexity theory are:
+(We will prove all these results later on.)
+\begin{itemize}\itemsep=0pt
+\item
+$\nls \subseteq \pt$.
+\item
+If $L \in \nspace[n^k]$, then $\Sigma^{\ast}-L \in \nspace[n^k]$.
+\item
+$\nspace[n^k] \subseteq \dspace[n^{2k}]$.
+\end{itemize}
+The third bullet is the reason why we only have the class $\ps$.
+
+
+Combining all these inclusions together,
+we obtain:
+$$
+\ls \ \subseteq \
+\nls \ \subseteq \
+\pt \ \subseteq \
+\npt \ \subseteq \
+\ps
+$$
+From the deterministic/non-deterministic space hierarchy, 
+it is also known that $\ls \subsetneq \ps$ and $\nls \subsetneq \ps$.
+So, we know that at least one of the inclusions must be strict,
+but we don't know which one.
+
+
+
+ 
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

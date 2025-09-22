@@ -1,0 +1,116 @@
+\documentclass[11pt, a4paper]{article}
+
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{0}
+\renewcommand{\lessontitle}{Homework 1}
+\renewcommand{\fulltitle}{\lessontitle}
+
+\renewcommand{\themycount}{1.\arabic{mycount}}
+
+\usepackage{xr}
+\externaldocument{../lesson-01/2021b-toc-note-01}
+
+
+%\usetikzlibrary{automata,positioning}
+%\tikzset{initial text={}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\begin{center}
+{\Large {\bf Due on Monday, 10:30 am, 28 March 2022 (111/03/28)}}
+\end{center}
+
+
+\vspace{0.5cm}
+
+\paragraph*{Question 1 (2 points).}
+Consider the proof of Theorem~\ref{theo:ladner}.
+Prove that Algorithm~1 runs in time $O(n^3)$.
+
+
+
+\paragraph*{Question 2 (2 points).}
+Prove that $\pt=\npt$ if and only if there is a polynomial time DTM for the following problem.
+
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{{\sf FIND-SOL}}
+\\
+\hline
+{\bf Input:}
+&
+A propositional formula $\varphi$ in CNF.
+\\
+{\bf Task:}
+&
+Output a satisfying assignment for $\varphi$, if it exists. 
+Otherwise, output $0$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+Note that {\sf FIND-SOL} is {\em not} an $\npt$-complete problem.
+Recall that $\npt$-complete problems are defined only on ``decision'' problems,
+i.e., determining whether a word $w$ is in a certain language $L$.
+
+
+\paragraph*{Question 3 (2 points).}
+Prove that if there is a unary language $L$ that is $\npt$-hard,
+then $\sat \in \pt$, and hence, $\pt=\npt$.
+
+Def: A language $L$ is a unary language, if $L \subseteq \{1\}^*$, i.e., every word $w\in L$ contains only $1$.
+
+\paragraph*{Question 4 (2 points).}
+Consider the following language $\cycle$.
+\begin{eqnarray*}
+\cycle & \defeq & \{G : G \ \text{is a directed graph and it contains a cycle}\}
+\end{eqnarray*}
+\begin{itemize}
+\item
+Prove that $\cycle$ is $\nls$-complete.
+\item 
+Give a logarithmic space NTM for $\overline{\cycle}$.
+
+Here $\overline{\cycle}$ is the complement of $\cycle$, defined as follows.
+\begin{eqnarray*}
+\overline{\cycle} & \defeq & \{G : G \ \text{is a directed graph and does not contain cycle}\}
+\end{eqnarray*}
+\end{itemize}
+
+\paragraph*{Question 5 (2 points).}
+Consider the following language $K$.
+\begin{eqnarray*}
+K & \defeq & \{ (\cM,w,1^n) : \cM \ \text{is a DTM that accepts}\ w \ \text{in space}\ n\}
+\end{eqnarray*}
+Prove that $K$ is $\ps$-complete.
+Is its complement $\overline{K}$ $\ps$-complete?
+
+
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

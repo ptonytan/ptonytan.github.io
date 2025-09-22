@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>CSIE 5118: Introduction to communication complexity</title>
+
+<style>
+table {border-collapse: collapse;}
+</style>
+
+</head>
+
+
+
+<h1><b>CSIE 5118: Introduction to communication complexity</b></h1>
+
+
+<TABLE CELLPADDING=0 CELLSPACING=0>
+	<TD>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</TD>
+	
+	<TD>
+
+	<h3>Instructor</h3> 
+	<ul style="line-height:1.4;">
+		<li>Name: Tony Tan</li>
+		<li>Room: CSIE 516</li>
+		<li>Office hour: By appointment via email</li>
+		<li>Email: <a href="mailto:tonytan@csie.ntu.edu.tw">tonytan@csie.ntu.edu.tw</a></li>
+		<li><a href="../..">Personal website</a></li>
+	</ul>
+
+	<h3>Venue and time</h3>
+	<ul style="line-height:1.4;">
+		<li>Friday, 10:30-13:00, room CSIE 546.</li>
+	</ul>
+
+	<h3>Administration</h3>
+	<ul style="line-height:1.4;">
+		<li>This document (<a href="2017b-comm-admin.pdf">2017b-comm-admin.pdf</a>) 
+			contains more information about the course.</li>
+		<li>To contact me, use: tonytan@csie.ntu.edu.tw</li>
+	</ul>
+
+
+
+	<h3>Syllabus (tentative)</h3>
+
+	<table border="1" style="width:100%">
+<thead>
+  	<tr height="30">
+		<th>Part</th>    		
+		<th>Week</th>
+    		<th>Dates</th>
+    		<th>Lesson</th>
+		<th>Remark</th>
+  	</tr>
+</thead>
+
+	<tr height="2"></tr>
+
+  	<tr height="30">
+		<th rowspan="1" bgcolor="#D3D3D3">A</th>
+    		<th bgcolor="#D3D3D3">I</th>
+    		<td bgcolor="#D3D3D3">2 Mar.</td>
+    		<td bgcolor="#D3D3D3">Lesson 1. Preliminaries</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+  	</tr>
+
+	<tr height="2"></tr>
+
+	<tr height="30">
+		<th rowspan="3" bgcolor="#D3D3D3">B</th>
+		<th bgcolor="#D3D3D3">II</th> 
+		<td bgcolor="#D3D3D3">9 Mar.</td>
+		<td bgcolor="#D3D3D3">Lesson 2. Deterministic protocols</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">III</th> 
+		<td bgcolor="#D3D3D3">16 Mar.</td>
+		<td bgcolor="#D3D3D3">Lesson 3. Fooling sets</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">IV</th> 
+		<td bgcolor="#D3D3D3">23 Mar.</td>
+		<td bgcolor="#D3D3D3">Lesson 4. Rank lower bounds</td>
+		<td bgcolor="#D3D3D3">HW 1 out.</td>
+	</tr>
+
+	<tr height="2"></tr>
+
+	<tr height="30">
+		<th rowspan="4" bgcolor="#D3D3D3">C</th>
+		<th bgcolor="#D3D3D3">V</th> 
+		<td bgcolor="#D3D3D3">30 Mar.</td>
+		<td bgcolor="#D3D3D3">Lesson 5. Non-deterministic protocols</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">VI</th> 
+		<td bgcolor="#D3D3D3">6 Apr.</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">VII</th> 
+		<td bgcolor="#D3D3D3">13 Apr.</td>
+		<td bgcolor="#D3D3D3">Lesson 6. Comm. complexity and covers</td>
+		<td bgcolor="#D3D3D3">HW 1 due.</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">VIII</th> 
+		<td bgcolor="#D3D3D3">20 Apr.</td>
+		<td bgcolor="#D3D3D3">Lesson 7. Continuing lesson 6</td>
+		<td bgcolor="#D3D3D3">HW 2 out.</td>
+	</tr>
+
+	<tr height="2"></tr>
+
+	<tr height="30">
+		<th rowspan="1" bgcolor="#D3D3D3"></th>
+		<th bgcolor="#D3D3D3">IX</th> 
+		<td bgcolor="#D3D3D3">27 Apr.</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="2"></tr>
+
+	<tr height="30">
+		<th rowspan="3" bgcolor="#D3D3D3">D</th>
+		<th bgcolor="#D3D3D3">X</th> 
+		<td bgcolor="#D3D3D3">4 May</td>
+		<td bgcolor="#D3D3D3">Lesson 8. Randomized protocols</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XI</th> 
+		<td bgcolor="#D3D3D3">11 May</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XII</th> 
+		<td bgcolor="#D3D3D3">18 May</td>
+		<td bgcolor="#D3D3D3">Lesson 9. Continuing lesson 8</td>
+		<td bgcolor="#D3D3D3">HW 2 due. HW 3 out.</td>
+	</tr>
+
+	<tr height="2"></tr>
+
+	<tr height="30">
+		<th rowspan="4" bgcolor="#D3D3D3">E</th>
+		<th bgcolor="#D3D3D3">XIII</th> 
+		<td bgcolor="#D3D3D3">25 May</td>
+		<td bgcolor="#D3D3D3">Lesson 10. Distributional complexity</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XIV</th>
+		<td bgcolor="#D3D3D3">1 Jun.</td>
+		<td bgcolor="#D3D3D3">Lesson 11. Discrepancy</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XV</th> 
+		<td bgcolor="#D3D3D3">8 Jun.</td>
+		<td bgcolor="#D3D3D3">Lesson 12. Linear lower bound for disjoint function</td>
+		<td bgcolor="#D3D3D3">HW 3 due.</td>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XVI</th> 
+		<td bgcolor="#D3D3D3">15 Jun.</td>
+		<td bgcolor="#D3D3D3">Lesson 13. Continuing lesson 12</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+	</tr>
+
+	<tr height="2"></tr>
+
+	<tr height="30">
+		<th rowspan="1" bgcolor="#D3D3D3">F</th>
+		<th bgcolor="#D3D3D3">XVII</th> 
+		<td bgcolor="#D3D3D3">22 Jun.</td>
+		<td bgcolor="#D3D3D3">Lesson 14. Some applications</td>
+		<td bgcolor="#D3D3D3">HW 4 out.</td>
+	</tr>
+
+	<tr height="2"></tr>
+
+	<tr height="30">
+		<th rowspan="1" bgcolor="#D3D3D3"></th>
+		<th bgcolor="#D3D3D3">XVIII</th> 
+		<td bgcolor="#D3D3D3">29 Jun.</td>
+		<td align="center" bgcolor="#D3D3D3">--</td>
+		<td bgcolor="#D3D3D3">HW 4 due.</td>
+	</tr>
+
+	</table>
+
+	<h3>Notes on homeworks</h3>
+	<ul style="line-height:1.4;">
+		<li>You should write down your class number, your student number and your name in your homework solution.</li>
+		<li>You can submit your homework earlier than the due date by slipping it under the door of my office.</li>
+		<li>Homework can be handwritten or typewritten. If it is handwritten, the writing must be legible.</li>
+		<li>The tidiness of your homework contributes to your grade.</li>
+		<li>Discussions/collaborations are allowed, but make sure that you acknowledge that you do your homeworks in collaboration and 		
+			that you understand and write down your own solutions.</li>
+		<li>Points will be deducted if you don't understand your own solutions.</li>
+	</ul>
+
+
+
+
+
+	</TD>
+
+</TABLE>
+
+<br></br>
+
+</html>

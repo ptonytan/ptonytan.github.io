@@ -1,0 +1,440 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{4}
+\renewcommand{\lessontitle}{The class $\nls$ and $\ps$}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+%\usepackage{xr}
+%\externaldocument{../lesson-00/2020b-toc-note-00}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} Some classical results on the class $\nls$ and $\ps$.
+
+
+\section{Classical results on the class $\nls$}
+
+We recall the notion of {\em log-space reduction}.
+Let $F:\Sigma^*\to\Sigma^*$ be a function.
+We say that $F$ is computable in logarithmic space, 
+if there is a 3-tape DTM $\cM$ such that on input word $w$,
+it works as follows.
+\begin{itemize}\itemsep=0pt
+\item
+Tape 1 contains the input word $w$ and its content never changes.
+\item
+There is a constant $c$ such that $\cM$ uses only $c\log |w|$ space in tape 2.
+\item
+The head in tape 3 can only ``write'' and move right, i.e.,
+once it writes a symbol to a cell, the content of that cell will not change.
+\end{itemize}
+Tape 1 is called the {\em input tape}, tape 2 the {\em work tape} and tape 3 the {\em output tape}.
+
+\begin{definition}
+\label{def:log-space-reduction}
+A language $L$ is log-space reducible to another language $K$,
+denoted by $L\leq_{\log} K$, if
+there is a function $F:\Sigma^*\to\Sigma^*$ computable in logarithmic space such that
+for every $w\in \Sigma^*$, $w\in L$ if and only if $F(w)\in K$.
+\end{definition}
+
+\begin{remark}
+The relation $\leq_{\log}$ is transitive in the sense that
+if $L_1\leq_{\log} L_2$ and $L_2\leq_{\log} L_3$,
+then $L_1\leq_{\log} L_3$.
+\end{remark}
+
+
+\begin{definition}
+\label{def:nl-complete}
+Let $K$ be a language.
+\begin{itemize}\itemsep=0pt
+\item
+$K$ is {\em $\nls$-hard}, if for every language $L\in \nls$, $L\leq_{\log} K$.
+\item
+$K$ is {\em $\nls$-complete}, if $K \in \nls$ and $K$ is $\nls$-hard.
+\end{itemize}
+\end{definition}
+
+Define the following language $\path$.
+\begin{eqnarray*}
+\path & \defeq & \{ (G,s,t) : G \ \text{is {\em directed} graph and there is a path in $G$ from vertex $s$ to vertex $t$}\}
+\end{eqnarray*}
+
+
+\begin{theorem}
+\label{theo:reach-nl-complete}
+$\path$ is $\nls$-complete.
+\end{theorem}
+
+
+\begin{theorem}
+\label{theo:det-nl}
+{\bf (Savitch 1970)}
+$\nls \subseteq \dspace [\log^2 n]$.
+\end{theorem}
+
+To prove Theorem~\ref{theo:det-nl},
+it suffices to show that $\path \in \dspace[\log^2 n]$.
+See Appendix~\ref{app:det-nl}.
+
+
+\begin{theorem}
+\label{theo:nl-conl}
+{\bf (Immerman 1988 and Szelepcs\'{e}nyi 1987)}
+$\nls=\conls$.
+\end{theorem}
+
+To prove Theorem~\ref{theo:nl-conl},
+we consider the complement language of $\path$:
+\begin{eqnarray*}
+\overline{\path} & \defeq & \{ (G,s,t) : G \ \text{is {\em directed} graph and there is {\em no} path in $G$ from vertex $s$ to vertex $t$}\}
+\end{eqnarray*}
+Note that $\overline{\path}$ is $\conls$-complete.
+To prove Theorem~\ref{theo:nl-conl},
+it suffices to show that $\overline{\path} \in \nls$.
+See Appendix~\ref{app:nl-conl}.
+
+
+\section{Classical results on the class $\ps$}
+
+
+\begin{definition}
+\label{def:pspace-complete}
+Let $K$ be a language.
+\begin{itemize}\itemsep=0pt
+\item
+$K$ is {\em $\ps$-hard}, if for every language $L\in \ps$, $L\leq_{p} K$.
+\item
+$K$ is {\em $\ps$-complete}, if $K \in \ps$ and $K$ is $\ps$-hard.
+\end{itemize}
+\end{definition}
+{\em Quantified Boolean formulas} (QBF) are formulas of the form:
+$$
+Q_1 x_1 \ Q_2 x_2 \ \cdots \ Q_n x_n \ \varphi(x_1,\ldots,x_n)
+$$
+where each $Q_i \in \{\forall, \exists\}$ and $\varphi(x_1,\ldots,x_n)$
+is a Boolean formula with variables $x_1,\ldots,x_n$.
+
+The intuitive meaning of each $Q_i$ is as follows.
+\begin{itemize}\itemsep=0pt
+\item
+$\forall x \ \psi$ means that for all $x\in \{\myT,\myF\}$, $\psi$ is true.
+\item
+$\exists x \ \psi$ means that there is $x\in \{\myT,\myF\}$ such that $\psi$ is true.
+\end{itemize}
+We define the problem $\tqbf$:
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\tqbf$}
+\\
+\hline
+{\bf Input:}
+&
+A QBF $\varphi$.
+\\
+{\bf Task:}
+&
+Return $\myT$, if 
+$\varphi$ is true.
+Otherwise, return $\myF$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+As usual, it can be viewed as a language $\tqbf\defeq\{\psi : \psi \ \text{is a true QBF}\}$.
+Note also that the usual Boolean formula can be viewed as a QBF,
+where each $Q_i$ is $\exists$.
+Thus, $\tqbf$ is a more general problem than $\sat$.
+
+\begin{theorem}
+\label{theo:tqbf}
+{\bf (Stockmeyer and Meyer 1973)}
+$\tqbf$ is $\ps$-complete.
+\end{theorem}
+
+Theorems~\ref{theo:savitch-poly-space} and~\ref{theo:immerman-poly-space} below are 
+the polynomial space analog of Theorem~\ref{theo:det-nl} and~\ref{theo:nl-conl}, respectively.
+In fact, they can be easily generalized to the so called {\em time} and {\em space constructible functions}.
+See Appendix~\ref{app:sec:time-space-constructible}.
+
+\begin{theorem}
+\label{theo:savitch-poly-space}
+{\bf (Savitch 1970)}
+$\nspace [n^k] \subseteq \dspace [n^{2k}]$.
+\end{theorem}
+
+\begin{theorem}
+\label{theo:immerman-poly-space}
+{\bf (Immerman 1988 and Szelepcs\'{e}nyi 1987)}
+$\nspace[n^k]=\conspace[n^k]$.
+\end{theorem}
+
+Note that Theorem~\ref{theo:savitch-poly-space} implies $\ps=\nps=\conps$.
+
+
+
+\newpage
+
+\appendix
+
+\section*{Appendix}
+
+\algsetup{indent=.5cm}
+
+\section{Proof of Theorem~\ref{theo:det-nl}}
+\label{app:det-nl}
+
+
+Algorithm~1 below decides the language $\path$.
+\begin{algorithm}[h!]
+\label{alg:savitch}
+\caption{\bf Algorithm~1}
+\begin{algorithmic}[1]
+\REQUIRE
+$(G,s,t)$, where $G$ is a directed graph and $s$ and $t$ are two vertices in $G$.
+\ENSURE
+$\acc$ iff there is a path in $G$ from $s$ to $t$. 
+\STATE
+Let $n$ be the number of vertices in $G$.
+\STATE
+$\acc$ iff $\textsc{Check}_{G}(s,t,\lceil \log n\rceil)=\myT$.
+\end{algorithmic}
+\end{algorithm}
+
+It uses Procedure $\textsc{Check}_G$ defined below.
+
+\begin{algorithm}[h]
+\label{proc:check}
+\caption{{\bf Procedure} $\textsc{Check}_G$}
+\begin{algorithmic}[1]
+\REQUIRE
+$(u,v,k)$ where $u$ and $v$ are two vertices in $G$, and $k$ is an integer $\geq 0$.
+\ENSURE
+Return $\myT$, if there is a path in $G$ of length $\leq 2^k$ from $u$ to $v$. Otherwise, return $\myF$.
+\IF{$k=0$}
+\RETURN $\myT$ iff ($u=v$\ or\ $(u,v)$ is an edge in $G$). 
+\ENDIF
+\FORALL{vertex $x$ in $G$}
+\STATE
+$b:= \textsc{Check}_G(u,x,k-1)$.
+\IF{$b=\myT$}
+\STATE
+$b := \textsc{Check}_G(x,v,k-1)$.
+\IF{$b=\myT$}
+\RETURN $\myT$.
+\ENDIF
+\ENDIF
+\ENDFOR
+\RETURN $\myF$.
+\end{algorithmic}
+\end{algorithm}
+
+Note that when computing $\textsc{Check}_G(u,x,k-1)$ and $\textsc{Check}_G(x,v,k-1)$,
+Procedure $\textsc{Check}_G$ can use the same space.
+Thus, it uses only $O(k\log n)$ space.
+Since $k$ is initialized with $\lceil \log n \rceil$,
+{\bf Algorithm~1} uses $O(\log^2 n)$ space in total.
+
+
+\section{Proof of Theorem~\ref{theo:nl-conl}}
+\label{app:nl-conl}
+
+Consider the following algorithm.
+\begin{algorithm}[h]
+\label{alg:no-path}
+\caption{{\bf Algorithm} $\textsc{No-path}$}
+\begin{algorithmic}[1]
+\REQUIRE
+$(G,s,t)$ where $G$ is directed graph and $s$ and $t$ are two vertices in $G$.
+\ENSURE
+There is an accepting run iff there is {\em no} path in $G$ from $s$ to $t$.
+\STATE
+$m:=$ the number of vertices in $G$ reachable from $s$.
+\STATE
+\COMMENT{Note: This value $m$ is computed with Procedure $\textsc{Count-Vertex}_G$ below.}
+\FORALL{vertex $x$ in $G$}
+\STATE
+Guess if $x$ is reachable from $s$.
+\IF{the guess is ``yes''}
+\STATE
+$m:=m-1$.
+\STATE
+Guess a path from $s$ to $x$.
+\STATE
+{\bf if} it is not possible to guess such a path {\bf then} $\rej$.
+\STATE
+{\bf if} there is such a path and $x=t$ {\bf then} $\rej$.
+\ENDIF
+\ENDFOR
+\STATE
+$\acc$ iff $m=0$.
+\end{algorithmic}
+\end{algorithm}
+
+The number of vertices reachable from $s$ can be computed with Procedure $\textsc{Count-Vertex}_G$ 
+defined below.
+
+\begin{algorithm}[h!]
+\label{proc:count-vertex}
+\caption{{\bf Procedure} $\textsc{Count-Vertex}_G$}
+\begin{algorithmic}[1]
+\REQUIRE
+$u$ where $u$ is a vertex in $G$.
+\ENSURE
+Return the number of vertices in $G$ reachable from vertex $u$,
+where the number is written in binary form.
+\STATE
+Let $n$ be the number of vertices in $G$.
+\STATE
+$m:=$ 1 + the outdegree of $u$.
+\STATE 
+\COMMENT{Note: $m$ is initialized with the number of vertices reachable from $u$ in $\leq 1$ steps.}
+\FOR{$i=2,\ldots,n$}
+\STATE
+$m':=0$.
+\FORALL{vertex $x$ in $G$}
+\STATE
+Guess if there is a path from $u$ to $x$ with length $\leq i$.
+\IF{the guess is ``yes''}
+\STATE\label{algo-step:verify-1}
+Verify it by guessing such a path (of length $\leq i$).
+\STATE
+$m':=m'+1$.
+\ENDIF
+\IF{the guess is ``no''}
+\STATE\label{algo-step:verify-2}
+Verify that indeed there is no such a path (of length $\leq i$).
+\ENDIF
+\ENDFOR
+\STATE $m:=m'$.
+\STATE
+\COMMENT{Note: On each iteration, $m$ is the number of vertices reachable from $u$ in $\leq i$ steps.}
+\ENDFOR
+\RETURN $m$
+\end{algorithmic}
+\end{algorithm}
+The verification in Line~\ref{algo-step:verify-2} above is done with the following procedure.
+\begin{algorithm}[hb!]
+\label{proc:verify}
+\caption{{\bf Procedure} $\textsc{Verify}_G$}
+\begin{algorithmic}[1]
+\REQUIRE
+$(u,x,m,i)$ where $u$ and $x$ are vertices in $G$, $i\geq 2$ is an integer and 
+$m$ is the number of vertices in $G$ reachable from $u$ in $\leq i-1$ steps.
+\ENSURE
+Verify that $x$ is not reachable from $u$ in $\leq i$ steps.
+\STATE
+$\ell:= m$.
+\FORALL{vertex $y$ in $G$}
+\STATE
+Guess if there is a path from $u$ to $y$ with length $\leq i-1$.
+\IF{the guess is ``yes''}
+\STATE
+$\ell:=\ell-1$.
+\STATE
+Guess a path (of length $\leq i-1$) from $u$ to $y$.
+\STATE\label{algo-step:verify-3}
+Verify that the edge $(y,x)$ does not exist in $G$.
+\ENDIF
+\ENDFOR
+\STATE
+Verification is complete iff $\ell=0$.
+\end{algorithmic} 
+\end{algorithm}
+
+Note that if any of the verification in Lines~\ref{algo-step:verify-1} and~\ref{algo-step:verify-2} in Procedure $\textsc{Count-Vertex}_G$
+and Line~\ref{algo-step:verify-3} in Procedure~$\textsc{Verify}_G$ fails,
+the whole algorithm rejects immediately.
+
+The correctness of Procedure~$\textsc{Count-Vertex}_G$ can be established by induction on $i$.
+The correctness of Algorithm~$\textsc{No-path}$ follows immediately from $\textsc{Count-Vertex}_G$.
+
+\section{Time and space constructible functions}
+\label{app:sec:time-space-constructible}
+
+\begin{definition}
+\label{def:constructible}
+Let $T:\bbN\to\bbN$ be a function.
+\begin{itemize}\itemsep=0pt
+\item
+We say that $T$ is {\em time constructible}, if for every $n$,
+$T(n)\geq n$ and there is a DTM that on input $1^n$ computes $1^{T(n)}$ in time $O(T(n))$.
+\item
+We say that $T$ is {\em space constructible}, if 
+there is a DTM that on input $1^n$ computes $1^{T(n)}$ in space $O(T(n))$.
+\end{itemize}
+\end{definition}
+
+Intuitively, when we say that $\cM$ runs in time/space $O(T(n))$,
+where $T$ is time/space constructible function,
+we can assume that on input word $w$, 
+$\cM$ first ``computes'' the amount of time/space needed to decide $w$,
+before going on to process $w$.
+
+Theorems~\ref{theo:savitch-poly-space} and~\ref{theo:immerman-poly-space} can be easily generalized to
+space constructible functions as follows.
+
+\begin{theorem}
+\label{theo:general-savitch-immerman}
+Let $f:\bbN\to\bbN$ be space constructible function such that $f(n)\geq \log n$, for every~$n$.
+\begin{itemize}\itemsep=0pt
+\item
+{\bf (Savitch 1970)}
+$\nspace [f(n)] \subseteq \dspace [f(n)^2]$.
+\item
+{\bf (Immerman 1988 and Szelepcs\'{e}nyi 1987)}
+$\nspace[f(n)]=\conspace[f(n)]$.
+\end{itemize}
+\end{theorem}
+
+
+\section{Hardness via log space reduction}
+\label{app:sec:hardness-via-log-space}
+
+In our definition of hardness for $\npt$, $\conpt$ and $\ps$,
+we require that the reduction is polynomial time reduction.
+It is also common to define hardness by insisting the reduction is log-space reduction.
+That is,
+we can define $K$ as $\npt$-hard by insisting $L\leq_{\log} K$, for every $L\in \npt$,
+rather than $L\leq_p K$.
+Similarly, for $\conpt$ and $\ps$.
+
+Most $\npt$-, $\conpt$- and $\ps$-complete problems are known to remain complete
+even under log-space reduction, including $\sat$, $\threesat$ and $\tqbf$.
+\begin{itemize}\itemsep=0pt
+\item
+$\sat$ and $\threesat$ are $\npt$-complete under log-space reduction.
+\item
+$\tqbf$ is $\ps$-complete under log-space reduction.
+\end{itemize}
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

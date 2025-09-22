@@ -1,0 +1,330 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{0}
+\renewcommand{\lessontitle}{Preliminaries}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} Review of some introductory material.
+
+%\section{Big-Oh notations}
+
+\vspace{0.7cm}
+\noindent
+Let $\bbN$ denote the set of natural numbers $\{0,1,2,\ldots\}$.
+Let $f$ and $g$ be functions from $\bbN$ to $\bbN$.
+\begin{itemize}
+\item
+$f= O(g)$ means that there is $c$ and $n_0$
+such that for every $n\geq n_0$, $f(n) \leq  c\cdot g(n)$.
+
+It is usually phrased as ``there is $c$
+such that for (all) sufficiently large $n$,'' $f(n)\leq c\cdot g(n)$.
+
+\item
+$f= \Omega(g)$ means $g=O(f)$.
+\item
+$f= \Theta(g)$ means $g=O(f)$ and $f=O(g)$.
+\item
+$f=o(g)$ means for every $c > 0$, $f(n)\leq c\cdot g(n)$ for sufficiently large $n$.
+
+Equivalently, $f=o(g)$ means $f=O(g)$ and $g\neq O(f)$. 
+
+Another equivalent definition is  $f=o(g)$ means $\lim_{n\to \infty} \frac{f(n)}{g(n)}=0$.
+
+\item
+$f=\omega(g)$ means $g=o(f)$.
+\end{itemize}
+To emphasize the input parameter, we will write $f(n)=O(g(n))$. 
+The same for the $\Omega, o, \omega$ notations.
+We also write $f(n)=\poly(n)$ to denote that $f(n)=c\cdot n^k$ for some $c$ and $k\geq 1$.
+
+
+Throughout the course, for an integer $n\geq 0$,
+we will denote by $\floor {n}$ the binary representation of $n$.
+Likewise, $\floor{G}$ the binary encoding of a graph $G$.
+In general, we write $\floor{X}$ to denote the encoding/representation of an object $X$
+as a binary string, i.e., a 0-1 string.
+To avoid clutter, we often write $X$ instead of $\floor {X}$.
+
+We usually use $\Sigma$ to denote a finite input alphabet. Often $\Sigma=\{0,1\}$.
+Recall also that for a word $w\in \Sigma^*$, $|w|$ denotes the length of $w$.
+For a DTM/NTM $\cM$, we write $L(\cM)$ to denote the language $\{w : \cM \ \text{accepts}\ w \}$.
+
+We often view a language $L\subseteq \Sigma^*$ as a boolean function,
+i.e., $L:\Sigma^*\to \{\myT,\myF\}$, where $L(x)=\myT$ if and only if $x\in L$,
+for every $x\in \Sigma^*$.
+
+\section{Time complexity}
+
+\begin{definition}
+\label{def:time}
+Let $\cM$ be a DTM/NTM, $w\in \Sigma^*$, $t\in \bbN$ and let $f:\bbN\to\bbN$ be a function.
+\begin{itemize}
+\item 
+{\em $\cM$ decides $w$ in time~$t$ (or, in $t$ steps)},
+if every run of $\cM$ on $w$ has length at most $t$.
+That is, for every run of $\cM$ on $w$:
+\begin{eqnarray*}
+C_0 \ \vdash \ C_1 \ \vdash \ \cdots \ \vdash \ C_m
+& & \hspace{1cm}\mbox{where} \ C_m \ \mbox{is a halting configuration,}
+\end{eqnarray*}
+we have $m \leq t$.
+\item
+{\em $\cM$ runs in time $O(f(n))$}, if 
+there is $c>0$ such that for sufficiently long word $w$,
+$\cM$ decides $w$ in time $c\cdot f(|w|)$.
+\item
+{\em $\cM$ decides/accepts a language $L$ in time $O(f(n))$},
+if $L(\cM)=L$ and $\cM$ runs in time~$O(f(n))$.
+\item
+$\dtime[f(n)] \defeq 
+\{L  :  \text{there is a DTM}\ \cM \ \text{that decides} \ L \ \text{in time} \ O(f(n))\}$.
+\item
+$\ntime[f(n)] \defeq 
+\{L  :  \text{there is an NTM}\ \cM \ \text{that decides} \ L \ \text{in time} \ O(f(n))\}$.
+\end{itemize}
+\end{definition}
+%Note that Definition~\ref{def:time} applies in similar manner for both DTM and NTM.
+%The only difference is that a DTM has one run for each input word $w$,
+%whereas NTM can have many runs for each input word $w$.
+%
+%\newpage
+
+We say that $\cM$ runs in {\em polynomial} and {\em exponential time},
+if there is $f(n)=\poly(n)$ such that $\cM$ runs in time $O(f(n))$ and $O(2^{f(n)})$, respectively.
+In this case we also say that $\cM$ is a polynomial/exponential time TM.
+
+
+The following are some of the important classes in complexity theory.
+\begin{eqnarray*}
+\pt \ \defeq \ \bigcup_{f(n)=\poly(n)} \ \dtime[f(n)]
+&\hspace{1.5cm} &
+\hspace{0.8cm}\expt \ \defeq \ \bigcup_{f(n)=\poly(n)} \ \dtime[2^{f(n)}]
+\\
+\npt \ \defeq \ \bigcup_{f(n)=\poly(n)} \ \ntime[f(n)]
+& &
+\hspace{0.45cm}\nexpt \ \defeq \ \bigcup_{f(n)=\poly(n)} \ \ntime[2^{f(n)}]
+\\
+\conpt \ \defeq \ \{L  :  \Sigma^{\ast}-L \in \npt\}\hspace{0.85cm}
+& & 
+\conexpt  \ \defeq \ \{L :  \Sigma^{\ast}-L \in \nexpt\}
+\end{eqnarray*}
+
+\begin{theorem}
+\label{theo:padding}
+{\bf (Padding theorem)}
+If $\npt=\pt$, then $\nexpt=\expt$. 
+
+Likewise, if $\npt=\conpt$, then $\nexpt=\conexpt$.
+\end{theorem}
+
+
+
+\section{Alternative definitions of the class $\npt$}
+\label{sec:def-np}
+
+Note that according to the definition in the previous section,
+the class $\npt$ can be defined as follows.
+
+\begin{definition}
+\label{def:np-a}
+A language $L$ is in $\npt$ if 
+there is $f(n)=\poly(n)$ and an NTM $\cM$ such that $L(\cM)=L$ and 
+$\cM$ runs in time $O(f(n))$.
+\end{definition}
+
+There is an alternative definition of $\npt$.
+
+\begin{definition}
+\label{def:np-b}
+A language $L\subseteq \Sigma^*$ is in $\npt$ if
+there is a language $K \subseteq \Sigma^*\times\Sigma^*$ such that the following holds.
+\begin{itemize}
+\item
+For every $w\in \Sigma^*$,
+$w\in L$ if and only if there is $v\in\Sigma^*$ such that $(w,v)\in K$.
+\item
+There is $f(n)=\poly(n)$ such that for every $(w,v)\in K$,
+$|v|\leq f(|w|)$.
+\item
+The language $K$ is accepted by a polynomial time DTM.
+\end{itemize}
+For $(w,v)\in K$, the string $v$ is called the {\em certificate/witness} for $w$.
+We call the language $K$ the {\em certificate/witness language} for $L$.
+\end{definition}
+
+Indeed Def.~\ref{def:np-a} and~\ref{def:np-b} are equivalent.
+That is,
+for every language $L$,
+$L$ is in $\npt$ in the sense of Def.~\ref{def:np-a}
+if and only if $L$ is in $\npt$ in the sense of Def.~\ref{def:np-b}.
+
+
+
+\section{$\npt$-complete languages}
+
+Recall that a DTM $\cM$ computes a function $F:\Sigma^*\to\Sigma^*$ in time $O(g(n))$, if
+there is a constant $c> 0$ such that
+on every word $w$, $\cM$ computes $F(w)$ in time $\leq cg(|w|)$.
+If $g(n)=\poly(n)$,
+such fucntion $F$ is called {\em polynomial time computable} function.
+Moreover, if $\cM$ uses only logarithmic space,
+it is called {\em logarithmic space computable} function.
+
+
+\begin{definition}
+\label{def:reduction}
+A language $L_1$ is {\em polynomial time  reducible} to another language $L_2$,
+denoted by $L_1\leq_p L_2$,
+if there is a polynomial time computable function $F$ such that
+for every $w\in \Sigma^{*}$:
+\begin{eqnarray*}
+w\in L_1 & \text{if and only if} & F(w) \in L_2
+\end{eqnarray*}
+Such function $F$ is called polynomial time reduction, also known as {\em Karp reduction}.
+
+If $F$ is logarithmic space computable function,
+we say that $L_1$ is {\em log-space reducible} to $L_2$,
+denoted by $L_1\leq_{\log} L_2$.
+
+If $L_1$ and $L_2$ are in $\npt$ with certificate languages $K_1$ and $K_2$, respectively,
+we say that $F$ is {\em parsimonious}, if for every $w\in \Sigma^{\ast}$,
+$w$ has the same number of certificates in $K_1$ as $F(w)$ in $K_2$.
+\end{definition}
+
+
+
+
+\begin{definition}
+\label{def:np-complete}
+Let $L$ be a language.
+\begin{itemize}\itemsep=0pt
+\item 
+$L$ is {\em $\npt$-hard}, if
+for every $L' \in \npt$, $L' \leq_p L$.
+\item
+$L$ is {\em $\npt$-complete},
+if $L \in \npt$ and $L$ is $\npt$-hard.
+\end{itemize}
+\end{definition}
+
+
+Recall that a propositional formula (Boolean expression) with variables $x_1,\ldots,x_n$
+is in Conjunctive Normal Form (CNF), if
+it is of the form:
+$\bigwedge_{i}\ \bigvee_j \ \ell_{i,j}$
+where each $\ell_{i,j}$ is a literal, i.e., a variable $x_k$ or its negation $\neg x_k$.
+It is in 3-CNF,
+if it is of the form
+$\bigwedge_{i}\ \big(\ell_{i,1} \ \vee \ \ell_{i,2} \ \vee \ \ell_{i,3}\big)$.
+A formula $\varphi$ is satisfiable, if there is an assignment of Boolean values $\myT$ or $\myF$
+to each variable in $\varphi$ that evaluates to $\myT$.
+
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\sat$}
+\\
+\hline
+\hline
+{\bf Input:}
+&
+A propositional formula $\varphi$ in CNF.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$\varphi$ is satisfiable.
+Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{$\threesat$}
+\\
+\hline\hline
+{\bf Input:}
+&
+A propositional formula $\varphi$ in 3-CNF.
+\\
+{\bf Task:}
+&
+Output $\myT$, if 
+$\varphi$ is satisfiable.
+Otherwise, output $\myF$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+Obviously, $\sat$ can be viewed as a language, i.e.,
+$\sat \defeq \{\varphi : \varphi \ \text{is satisfiable CNF formula}\}$.
+Likewise, for $\threesat$.
+
+\begin{theorem}
+{\bf (Cook 1971, Levin 1973)}
+$\sat$ and $\threesat$ are $\npt$-complete.
+\end{theorem}
+
+
+\section{$\conpt$-complete problems}
+\label{app:sec:conp}
+
+Analogous to $\npt$-complete,
+we can also define $\conpt$-complete problems.
+\begin{definition}
+\label{def:conp-complete}
+Let $K$ be a language.
+\begin{itemize}
+\item 
+$K$ is {\em $\conpt$-hard}, if
+for every $L \in \conpt$, $L \leq_p K$.
+\item
+$K$ is {\em $\conpt$-complete},
+if $K \in \conpt$ and $K$ is $\conpt$-hard.
+\end{itemize}
+\end{definition}
+
+Note that for every language $K$,
+$K$ is $\npt$-complete if and only if its complement $\overline{K}$ is $\conpt$-complete,
+where $\overline{K}\defeq\Sigma^*-K$.
+Thus, $\overline{\sat}\defeq \{\varphi : \varphi \ \text{is not satisfiable}\}$ is $\conpt$-complete.
+
+
+
+
+ 
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

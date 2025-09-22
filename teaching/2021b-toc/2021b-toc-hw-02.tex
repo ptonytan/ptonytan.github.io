@@ -1,0 +1,158 @@
+\documentclass[11pt, a4paper]{article}
+
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{0}
+\renewcommand{\lessontitle}{Homework 2}
+\renewcommand{\fulltitle}{\lessontitle}
+
+\renewcommand{\themycount}{1.\arabic{mycount}}
+
+\usepackage{xr}
+\externaldocument{../lesson-03/2021b-toc-note-03}
+\externaldocument{../lesson-05/2021b-toc-note-05}
+
+%\usetikzlibrary{automata,positioning}
+%\tikzset{initial text={}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\begin{center}
+{\Large {\bf Due on Monday, 10:30 am, 25 April 2022 (111/04/25)}}
+\end{center}
+
+
+\vspace{0.5cm}
+
+\paragraph*{Question 1 (1 point).}
+Consider the problem $\circuiteval$ and Theorem~\ref{theo:circuit-eval} in Note~3.
+The main idea for the proof of hardness is as follows.
+Let $\cM$ be a polynomial time DTM.
+On input word $w$, the reduction constructs a circuit $C$ such that:
+\begin{eqnarray*}
+C(w)=1 \qquad& \text{if and only if} &\qquad \cM\ \text{accepts}\ w
+\end{eqnarray*} 
+The construction of $C$ is similar to Cook-Levin reduction for the proof of $\npt$-hardness of $\sat$.
+Explain why we need the fact that $\cM$ is DTM and {\em not} NTM in the proof of Theorem~\ref{theo:circuit-eval}.
+
+
+
+
+\paragraph*{Question 2 (2 points).}
+Prove that $\pht$ collapses if any one of the following is true.
+\begin{itemize}
+\item
+$\sigmap {i} = \pip {i}$ for some $i\geq 1$.
+\item
+There is $\pht$-complete language.
+\item
+$\pht=\ps$.
+\end{itemize}
+
+\paragraph*{Question 3 (2 points).}
+Suppose that $A$ is a language such that $\pt^A =\npt^A$.
+Prove that $\pht^{A}\subseteq \pt^A$.
+
+\vspace{0.3cm}
+{\bf Def:} A language $L$ is in the class {\em $\sigmap {i}$ with oracle access to $A$},
+if there is a polynomial $q(n)$ and a polynomial time DTM $\cM^A$
+such that for every $w\in \Sigma^*$ the following holds.
+\begin{eqnarray*}
+\label{eq:sigmap}
+w \in L & \text{iff} &
+\exists y_1 \in \{0,1\}^{q(|w|)}\ 
+\forall y_2 \in \{0,1\}^{q(|w|)}\ 
+\cdots \
+Q y_i \in \{0,1\}^{q(|w|)}\
+\cM^A \ \text{accepts}\ (w,y_1,\ldots,y_i) 
+\end{eqnarray*}
+As before, $\cM^{A}$ denotes the TM $\cM$ with oracle access to $A$.
+A language $L$ is in $\pht^A$, if there is $i$ such that $L$ is in the class $\sigmap {i}$ with oracle access to $A$.
+
+
+\paragraph*{Question 4 (1 point).}
+Consider the following two problems.
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{{\sf CYCLE-COVER}}
+\\
+\hline
+{\bf Input:}
+&
+A directed graph $G$.
+\\
+{\bf Task:}
+&
+Output a cycle cover of $A$, if exists.
+Otherwise, output $0$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+\begin{quote}
+{\def\arraystretch{1.25}
+\begin{tabular}{|ll|}
+\hline
+\multicolumn{2}{|l|}{{\sf MATCHING}}
+\\
+\hline
+{\bf Input:}
+&
+A bipartite (undirected) graph $H=(U,V,E)$, where $|U|=|V|$.
+\\
+{\bf Task:}
+&
+Output a matching of $H$, if exists.
+Otherwise, output $0$.
+\\
+\hline
+\end{tabular}}
+\end{quote}
+Here a matching of $H=(U,V,E)$ is defined as a set $E_0\subseteq E$
+such that every vertex $u \in U\cup V$ is incident to exactly one edge in $E_0$.
+In other words, $E_0$ forms a ``bijection'' from $U$ to $V$.
+
+Prove that {\sf CYCLE-COVER} and {\sf MATCHING} are reducible to each other in polynomial time.
+
+
+
+
+
+
+
+
+\paragraph*{Question 5 (2 points).}
+Prove Lemma~\ref{lem:xor-graph} in Note 5.
+
+
+
+\paragraph*{Question 6 (2 points).}
+Prove Lemma~\ref{lem:cycle-cover-assignment} in Note 5.
+
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

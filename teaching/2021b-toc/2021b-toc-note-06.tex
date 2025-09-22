@@ -1,0 +1,143 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{6}
+\renewcommand{\lessontitle}{Boolean circuits}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+%\externaldocument{../lesson-04/2020b-toc-note-04}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} Some classical results on boolean circuits.
+
+\vspace{0.5cm}
+
+
+Let $n\in \bbN$, where $n\geq 1$.
+An $n$-input {\em Boolean circuit} $C$ is a directed acyclic graph with
+$n$ {\em source} vertices (i.e., vertices with no incoming edges) and 
+$1$ {\em sink} vertex (i.e., vertex with no outgoing edge).
+
+The source vertices are labelled with $x_1,\ldots,x_n$.
+The non-source vertices, called {\em gates},
+are labelled with one of $\wedge, \vee,\neg$.
+The vertices labelled with $\wedge$ and $\vee$ have {\em two} incoming edges,
+whereas the vertices labelled with $\neg$ have one incoming edge.
+The size of $C$, denoted by $|C|$, is the number of vertices in $C$.
+
+On input $w = x_1\cdots x_n$, where each $x_i \in \{0,1\}$,
+we write $C(w)$ to denote the output of $C$ on $w$,
+where $\wedge,\vee,\neg$ are interpreted in the natural way
+and $0$ and $1$ as $\myF$ and $\myT$, respectively.
+
+We refer to the in-degree and out-degree of vertices in a circuit as {\em fan-in} and {\em fan-out}, respectively.
+In our definition above, we require fan-in 2.
+
+\begin{itemize}
+\item
+A circuit family is a sequence $\{C_n\}_{n\in \bbN}$ such that every $C_n$ has input $n$ inputs and a single output.
+
+To avoid clutter, we write $\{C_n\}$ to denote a circuit family.
+\item 
+We say that {\em $\{C_n\}$ decides a language $L$},
+if for every $n\in\bbN$, for every $w\in \{0,1\}^n$, $w\in L$ if and only if $C_n(w)=1$.
+
+\item
+We say that {\em $\{C_n\}$ is of size $T(n)$}, where $T:\bbN\to\bbN$ is a function,
+if $|C_n|\leq T(n)$, for every $n\in \bbN$.
+
+\end{itemize}
+We define the following class.
+\begin{eqnarray*}
+\ppoly & \defeq &
+\big\{L : L \ \text{is decided by}\ \{C_n\} \ \text{of size}\ q(n) \ \text{for some polynomial}\ q(n)\big\} 
+\end{eqnarray*}
+That is, the class of languages decided by a circuit family of polynomial size.
+
+\begin{remark}
+It is not difficult to show that {\em every} unary language $L$ is in $\ppoly$.
+Thus, $\ppoly$ contains some undecidable language.
+\end{remark}
+
+\begin{definition}
+\label{def:p-uniform}
+A circuit family $\{C_n\}$ is {\em $\pt$-uniform}, if there is a polynomial time DTM
+that on input $1^n$, output the description of the circuit $C_n$. 
+\end{definition}
+
+
+\begin{theorem}
+\label{theo:pt-p-uniform}
+A language $L$ is in $\pt$ if and only if
+it is decided by a $\pt$-uniform circuit family.
+\end{theorem}
+
+\begin{theorem}
+\label{theo:karp-lipton-circuit}
+{\bf (Karp and Lipton 1980)}
+If $\npt \subseteq \ppoly$, then $\pht=\sigmap{2}$. 
+\end{theorem}
+
+\begin{theorem}
+{\bf (Meyer 1980)}
+If $\expt \subseteq \ppoly$, then $\expt=\sigmap{2}$. 
+\end{theorem}
+
+\begin{theorem}
+{\bf (Shannon 1949)}
+For every $n>1$, there is a function $f:\{0,1\}^n\to \{0,1\}$ that
+cannot be computed by a circuit of size $2^n/(10n)$.
+\end{theorem}
+
+
+\paragraph*{The classes $\nc$ and $\ac$.}
+For a circuit $C$, the {\em depth} of $C$ is the length of the longest directed path
+from an input vertex to the output vertex.\footnote{Here we take the length of a path as the number of edges in it.}
+For a function $T:\bbN\to\bbN$, we say that a circuit family $\{C_n\}$ has depth $T(n)$,
+if for every $n$, the depth of $C_n$ is $\leq T(n)$.
+
+For every $i$, the classes $\nc^i$ and $\ac^i$ are defined as follows.
+\begin{itemize}
+\item 
+A language $L$ is in $\nc^i$, if there is $f(n)=\poly(n)$ such that 
+$L$ is decided by a circuit family of size $f(n)$ and depth $O(\log^i n)$.
+\item 
+The class $\ac^i$ is defined analogously, except that gates in the circuits are allowed to have unbounded fan-in.
+\end{itemize}
+The classes $\nc$ and $\ac$ are defined as follows.
+\begin{eqnarray*}
+\nc \ \defeq \ \bigcup_{i\geq 0}\ \nc^i
+&\hspace{1cm}\text{and}\hspace{1cm} &
+\ac \ \defeq \ \bigcup_{i\geq 0}\ \ac^i
+\end{eqnarray*}
+Note that $\nc^i \subseteq \ac^i \subseteq \nc^{i+1}$.
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

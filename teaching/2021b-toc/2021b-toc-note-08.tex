@@ -1,0 +1,618 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{8}
+\renewcommand{\lessontitle}{Probabilistic reductions}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+%\externaldocument{../lesson-09/2020b-toc-note-09}
+%\externaldocument{../lesson-10/2020b-toc-note-10}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} Probabilistic reductions and preliminary to Toda's theorem.
+
+
+
+\section{Probabilistic reduction from $\sat$ to $\usat$}
+
+Let $\usat$ be the following language.
+\begin{eqnarray*}
+\usat & \defeq & \{\varphi: \varphi\ \text{is a boolean formula with unique satisfying assignment}\}
+\end{eqnarray*}
+
+
+\begin{theorem}
+\label{theo:valiant-vazirani}
+{\bf (Valiant and Vazirani, 1986)}
+There is a probabilistic polynomial time algorithm $\cM$ such that 
+on input (Boolean) formula $\varphi$,
+the output of $\cM$, denoted by $\cM(\varphi)$, satisfies the following.
+\begin{itemize}
+\item
+If $\varphi \in \sat$, then $\prarg {\cM(\varphi)\in \usat} \geq 3/(16n)$, where $n$ is the number of variables in $\varphi$.
+\item 
+If $\varphi \notin \sat$, then $\prarg {\cM(\varphi)\in \sat} =0$.
+\end{itemize}
+\end{theorem}
+\begin{proof}
+The algorithm $\cM$ works as follows.
+On input formula $\varphi$, do the following.
+\begin{itemize}
+\item 
+Let $x_1,\ldots,x_n$ be the variables in $\varphi$.
+\item 
+Let $x \defeq (x_1,\ldots,x_n)$.
+\item
+Randomly choose $k \in \{2,\ldots,n+1\}$.
+\item 
+Randomly choose a hash function $h\in \cH_{n,k}$, where $\cH_{n,k}$ is pair-wise independent.
+\item 
+Output the formula $\varphi(x) \wedge (h(x)=0)$, where $0$ is a column vector of zeroes of size $k$.
+\end{itemize}
+Note that the part $h(x)=0$ can be stated as a boolean formula.
+If we use the collection $\cH_{n,k}$ as in Theorem~\ref{theo:hash-exists-b},
+$h(x)=0$ is of the form: $Ax+b=0$, which is equivalent to $Ax=b$.
+This can be written into the following form:
+$$
+\bigwedge_{i=1}^k\  \Big(\big(A_{i,1} x_{1} \oplus \cdots \oplus A_{i,n}x_n\big) \ \iff \ b_i\Big)
+$$
+Here $\oplus$ denotes the XOR operation.
+Note that each $A_{i,1} x_{1} \oplus \cdots \oplus A_{i,n}x_n$ can be rewritten
+into formulas using only $\wedge,\vee,\neg$ in quadratic time as follows.
+Divide it into two halves, rewrite each half (recursively) and combine them with
+the standard definition of XOR.
+
+Now, we prove the correctness of our algorithm.
+Obviously, if the input formula $\varphi$ is not satisfiable, so is the output formula.
+Suppose $\varphi$ is satisfiable. Let $S$ be the set of satisfying assignments of $\varphi$.
+With probability $1/n$, the algorithm chooses a value $k$ such that $2^{k-2}\leq |S|\leq 2^{k-1}$.
+By Lemma~\ref{lem:valiant-vazirani}, the probability that there is a unique $x\in S$ such that $h(x)=0$ is~$\geq 3/16$.
+Thus, the probability that $\cM(\varphi)\in \usat$ is at least $3/(16n)$.
+\end{proof}
+
+\section{The language $\paritysat$ and the class $\paritypt$}
+\label{sec:paritysat}
+
+The language $\paritysat$ is defined as follows.
+\begin{eqnarray*}
+\paritysat & \defeq & \{\varphi : \varphi\ \text{is a Boolean formula with {\em odd} number of satisfying assignments}\}
+\end{eqnarray*}
+The class $\paritypt$ is defined as follows.
+A language $L \in \paritypt$, if there is a polynomial time NTM $\cM$
+such that for every input word $w$, $w\in L$ if and only if
+the number of accepting runs of $\cM$ on $w$ is odd number.
+
+We define a few terminology and notations.
+Let $\sharp\varphi$ denote the number of 
+satisfying assignments of a (Boolean) formula $\varphi$.
+We will define operations $\sim$, $\sqcap$ and $\sqcup$ on formulas such that
+the following holds.
+$$
+\sharp(\sim\varphi)=\sharp\varphi +1\qquad\qquad
+\sharp(\varphi\sqcap\phi)=\sharp\varphi \cdot \sharp\phi \qquad\qquad
+\sharp(\varphi\sqcup\phi)=(\sharp\varphi +1)\cdot(\sharp\phi +1)+1
+$$
+Obviously the following holds.
+\begin{eqnarray*}
+\sim\varphi\ \in \ \paritysat & \text{if and only if} & \varphi\ \notin\ \paritysat
+\\
+\varphi\sqcap\phi\ \in\ \paritysat & \text{if and only if} & \text{both}\ \varphi,\phi\ \in\ \paritysat
+\\
+\varphi\sqcup\phi\ \in\ \paritysat & \text{if and only if} & \text{at least one of}\ \varphi,\phi\ \in\ \paritysat
+\end{eqnarray*}
+These operations are defined as follows.
+\begin{itemize}
+\item
+For $\varphi$ with variables $x_1,\ldots,x_n$,
+we pick a ``new'' variable $z$ and define $\sim\varphi$ as follows.
+\begin{eqnarray*}
+\sim\varphi & \defeq &
+\big(\neg z \wedge \varphi\big) \ \vee \ \big(z\wedge \bigwedge_{i=1}^n x_i\big)
+\end{eqnarray*}
+\item
+For two formulas $\varphi$ and $\psi$, we rename the variables 
+so that the variables in $\varphi$ and $\phi$ are disjoint,
+and define $\varphi\sqcap\psi$ as follows.
+\begin{eqnarray*}
+\varphi\sqcap\phi & \defeq &
+\varphi\wedge\phi
+\end{eqnarray*}
+\item
+For two formulas $\varphi$ and $\psi$, we rename the variables 
+so that the variables in $\varphi$ and $\phi$ are disjoint,
+and define $\varphi\sqcup\psi$ as follows.
+\begin{eqnarray*}
+\varphi\sqcup\phi & \defeq &
+\sim(\sim\varphi \ \sqcap \ \sim\phi)
+\end{eqnarray*}
+\end{itemize}
+
+
+\section{Probabilistic reductions from $\sat$ and $\overline{\sat}$ to $\paritysat$}
+
+Theorem~\ref{theo:valiant-vazirani} can be easily extended
+to obtain reductions from $\sat$ and $\overline{\sat}$ to $\paritysat$.
+
+
+\begin{lemma}
+\label{lem:sat-to-paritysat}
+{\bf (Reduction from $\sat$ to $\paritysat$)}
+There is a polynomial time PTM $\cM$ 
+that on input formula $\varphi$ and a positive integer $m$ (in unary), 
+outputs a formula, denoted by $\cM(\varphi,m)$, such that the following holds.
+\begin{itemize}
+\item
+If $\varphi \in \sat$, then $\prarg {\cM(\varphi,m)\in\paritysat} \geq 1-2^{-m}$.
+\item
+If $\varphi\notin \sat$, then $\prarg {\cM(\varphi,m)\in \paritysat} =0$.
+\end{itemize}
+Moreover, the output $\cM(\varphi,m)$ uses $O(mn^2)$ variables,
+where $n$ is the number of variables in $\varphi$.\footnote{Abusing the notation, $O(mn^2)$ denotes $\leq cmn^2$, for some constant $c$.}
+\end{lemma}
+\begin{proof}
+On input $\varphi$ with $n$ variables, 
+the algorithm $\cM$ first runs the reduction in Theorem~\ref{theo:valiant-vazirani} on $\varphi$
+for $8mn$ times to obtain formulas $\psi_1,\ldots,\psi_{8mn}$.
+Then, it outputs $\sim (\sim\psi_1  \sqcap  \cdots  \sqcap  \sim \psi_{8mn})$.\footnote{Note that 
+$\sim (\sim\psi_1  \sqcap  \cdots \sqcap  \sim \psi_{8mn})$ is equivalent to $\psi_1\sqcup \cdots\sqcup \psi_{8mn}$.}
+Obviously, $\cM$ runs in polynomial time.
+Note also that the output formula uses $8mn(n+1)+1=O(mn^2)$ variables.
+
+Recall that on input $\varphi$ with $n$ variables,
+the reduction in Theorem~\ref{theo:valiant-vazirani} outputs a formula $\psi$ such that
+the following holds.
+\begin{itemize}
+\item
+If $\varphi \in \sat$, then $\prarg{\psi \in\usat}\geq 1/(8n)$.
+\item
+If $\varphi \notin \sat$, then $\prarg{\psi \in\sat}=0$.
+\end{itemize}
+Note the following.
+\begin{itemize}
+\item
+If $\psi \notin \paritysat$, then $\psi \notin \usat$. Thus,
+$\prarg {\psi\notin \paritysat} \leq \prarg {\psi\notin \usat}$.
+\item
+$\bigsqcup_{i=1}^{8mn} \psi_i \in\paritysat$ if and only if one of $\psi_i \in \paritysat$. 
+\end{itemize}
+Thus, on input $\varphi$, the output $\bigsqcup_{i=1}^{8mn} \psi_i$ satisfies the following.
+\begin{itemize}
+\item
+If $\varphi \notin \sat$, then none of the $\psi_i$ is satisfiable.
+Thus, $\bigsqcup_{i=1}^{8mn} \psi_i \notin \paritysat$.
+Therefore, 
+\begin{eqnarray*}
+\prargbig{ \bigsqcup_{i=1}^{8mn} \psi_i \ \in\ \paritysat } & = & 0
+\end{eqnarray*}
+\item
+If $\varphi \in \sat$, the following holds.
+\begin{eqnarray*}
+\prargbig {\bigsqcup_{i=1}^{8mn} \psi_i \notin  \paritysat} & = &
+\prod_{i=1}^{8mn} \prarg{\psi_i \notin \paritysat} 
+\ \leq\
+\Big(1-\frac{1}{8n}\Big)^{8mn}
+\ \leq \ (1/e)^{m}
+\ \leq \ (1/2)^{m}
+\end{eqnarray*}
+Therefore, $\prarg{\bigsqcup_{i=1}^{8mn} \psi_i  \in  \paritysat} \geq 1-(1/2)^m$.
+\end{itemize}
+This completes the proof of Lemma~\ref{lem:sat-to-paritysat}.
+\end{proof}
+
+
+\begin{lemma}
+\label{lem:unsat-to-paritysat}
+{\bf (Reduction from $\overline{\sat}$ to $\paritysat$)}
+There is a polynomial time PTM $\cM$ 
+that on input formula $\varphi$ and a positive integer $m$ (in unary), 
+outputs a formula, denoted by $\cM(\varphi,m)$, such that the following holds.
+\begin{itemize}
+\item
+If $\varphi \in \overline{\sat}$, then $\prarg {\cM(\varphi,m)\in\paritysat} =1$.
+\item
+If $\varphi\notin \overline{\sat}$, then $\prarg {\cM(\varphi,m)\in \paritysat} \leq (1/2)^m$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+The PTM $\cM$ works as follows.
+On input $\varphi$ and $m$, it runs the reduction in Lemma~\ref{lem:sat-to-paritysat} to obtain a formula $\psi$,
+and then outputs $\sim \psi$.
+
+If $\varphi \in \overline{\sat}$, then $\prarg {\psi \notin \paritysat} = 1$, and hence,
+$\prarg{\sim\psi \in \paritysat}=1$.
+
+If $\varphi \notin \overline{\sat}$, then $\prarg {\sim \psi \in \paritysat} = \prarg {\psi \notin \paritysat} \leq (1/2)^m$.
+\end{proof}
+
+Combining Lemmas~\ref{lem:sat-to-paritysat} and~\ref{lem:unsat-to-paritysat}
+and Cook-Levin reduction, 
+we have the following.
+
+\begin{theorem}
+\label{theo:np-conp-to-paritysat}
+{\bf (Reductions from languages in $\npt\cup\conpt$ to $\paritysat$)}
+For every language $L\in \npt\cup\conpt$,
+there is a polynomial time PTM $\cM$ 
+that on input word $w$ and a number $m$ (in unary), 
+outputs a formula $\cM(w,m)$ such that the following holds.
+\begin{itemize}
+\item
+If $w\in L$, then $\prarg {\cM(w,m)\in\paritysat} \geq 1-(1/2)^m$.
+\item
+If $w\notin L$, then $\prarg {\cM(w,m)\in \paritysat} \leq (1/2)^m$.
+\end{itemize}
+\end{theorem}
+
+
+\section{Probabilistic reductions from languages in $\pht$ to $\paritysat$}
+
+In this section we will show how to extend Theorem~\ref{theo:np-conp-to-paritysat}
+to all languages in $\pht$.
+We need some terminology and notations.
+We write $\vx$, $\vy$ or $\vz$ to denote a sequence of variables,
+and the length is denoted by $|\vx|$, $|\vy|$ or $|\vz|$, respectively.
+
+Recall that a QBF is formula of the form: 
+$Q_1\vz_1\cdots Q_k\vz_k\quad \phi$
+where each $Q_i \in \{\forall,\exists\}$ and $Q_i \neq Q_{i+1}$, each $\vz_i$ is a vector of variables
+and $\phi$ is a formula that uses variables $\vz_1,\ldots,\vz_k$.
+Note that all variables used in $\psi$ are ``quantified.''
+
+\paragraph*{QBF with free variables.}
+A {\em QBF with free variables} is a QBF formula that has variables that are not quantified, i.e.,
+of the form: 
+\begin{eqnarray*}
+\varphi & \defeq &
+Q_1\vz_1\cdots Q_k\vz_k\quad \phi
+\end{eqnarray*}
+where $\phi$ uses some variables $\vy$ that are ``free,'' i.e., not quantified by any quantifiers,
+in addition to the variables $\vz_1,\ldots,\vz_k$.
+In this case, we write $\varphi(\vy)$ to indicate that $\vy$ are free.
+For example, in the formula $\forall x \exists z (x\vee y \vee z)$, variables $x,z$ are quantified,
+but variable $y$ is free.
+
+We usually denote an assignment that assigns variables in $\vy$ as a string $\va \in \{0,1\}^n$
+with the same length as $\vy$.
+For a QBF $\varphi(\vy)$ with free variable $\vy$ and $\va$ be an assignment on $\vy$,
+we write $\varphi(\va)$ to denote the QBF (without free variables)
+obtained by substituting every variable in $\vy$ according to $\va$.
+
+In the following the term ``QBF'' means a QBF which may or may not contain free variables.
+A {\em $k$-QBF} is a QBF in which there are $k$ alternating quantifiers, i.e.,
+$Q_1\vz_1\cdots Q_k\vz_k\ \psi$, where each $Q_i\neq Q_{i+1}$.
+
+
+\paragraph*{The operations $\sim$, $\sqcap$ and $\sqcup$ with formulas with ``free'' variables.}
+In the following we will deal with boolean formulas $\varphi$ with ``free'' variables.
+Intuitively, free variables in a boolean formula are variables that cannot be renamed.
+We write $\varphi(\vy)$ to indicate that $\vy$ are the free variables in $\varphi$.
+\begin{itemize}
+\item
+$\sim \varphi(\vy)$ is defined as before
+and the resulting formula $\sim(\varphi(\vy))$ also have free variables $\vy$.
+\item
+For $\varphi(\vy)$ and $\phi(\vy)$, we rename the variables 
+so that $\vy$ are the only common variables in $\varphi$ and $\phi$
+and define $\varphi(\vy)\sqcap\phi(\vy) \ \defeq \ \varphi(\vy)\wedge\phi(\vy)$
+with free variables $\vy$.
+\item
+For $\varphi(\vy)$ and $\phi(\vy)$,
+we define $\varphi(\vy)\sqcup\phi(\vy) \ \defeq \ \sim(\sim\varphi(\vy) \ \sqcap \ \sim\phi(\vy))$
+with free variables $\vy$.
+\end{itemize}
+
+\begin{lemma}
+\label{lem:sigmasat-pisat-paritysat}
+{\bf (Reductions from $\sigmasat{k}$ and $\pisat {k}$ to $\paritysat$)}
+For every $k\geq 1$, there is a probabilistic polynomial time algorithm $\cM$ that
+on input a $k$-QBF $\varphi(\vy)$ and a positive integer $m$ (in unary),
+outputs a formula $\psi(\vy)$ such that 
+\begin{eqnarray*}
+\prarg {\psi(\vy) \ \text{is ``correct''}} & \geq & 1-(1/2)^m
+\end{eqnarray*}
+Here we define a formula $\psi(\vy)$ to be ``correct'' when
+$\varphi(\va)$ is a true QBF if and only if $\psi(\va)\in\paritysat$,
+for every assignment $\va$ on $\vy$.
+\end{lemma}
+\begin{proof}
+The proof is by induction on $k$.
+The base case $k=1$ is similar to Lemmas~\ref{lem:sat-to-paritysat} and~\ref{lem:unsat-to-paritysat}.
+On input $1$-QBF $\varphi(\vy)$ and integer $m$,
+the algorithm $\cM$ works as follows.
+\begin{itemize}
+\item
+If $\varphi(\vy)$ is of the form $\exists\vx\ \psi(\vx,\vy)$,
+where $\vx$ contains $n$ variables, do the following.
+
+For each $i=1,\ldots,8mn$, construct formula $\alpha_i(\vy)$ as follows.
+\begin{itemize}
+\item
+Randomly choose $k \in \{2,\ldots,n+1\}$.
+\item 
+Randomly choose a hash function $h\in \cH_{n,k}$, where $\cH_{n,k}$ is pair-wise independent.
+\item 
+Let $\alpha_i(\vy)$ denote the formula $\psi(\vx,\vy) \wedge (h(\vx)=0)$.
+\end{itemize}
+Then, output the formula $\psi(\vy)$ where $\psi(\vy)$ is the formula $\bigsqcup_{i=1}^{8mn} \alpha_i(\vy)$.
+
+\item
+If $\varphi(\vy)$ is of the form $\forall\vx\ \psi(\vx,\vy)$,
+where $\vx$ contains $n$ variables, do the following
+
+For each $i=1,\ldots,8mn$, construct formula $\alpha_i(\vy)$ as follows.
+\begin{itemize}
+\item
+Randomly choose $k \in \{2,\ldots,n+1\}$.
+\item 
+Randomly choose a hash function $h\in \cH_{n,k}$, where $\cH_{n,k}$ is pair-wise independent.
+\item 
+Let $\alpha_i(\vy)$ denote the formula $\neg\psi(\vx,\vy) \wedge (h(\vx)=0)$.
+\end{itemize}
+Then, output the formula $\psi(\vy)$, where $\psi(\vy)$ is the formula $\sim \bigsqcup_{i=1}^{8mn}\alpha_i(\vy)$.
+\end{itemize}
+The proof that 
+$\prarg {\psi(\vy) \ \text{is correct}}\geq 1-(1/2)^m$ 
+is similar to Lemmas~\ref{lem:sat-to-paritysat} and~\ref{lem:unsat-to-paritysat}.
+ 
+For the induction hypothesis, we assume Lemma~\ref{lem:sigmasat-pisat-paritysat} holds for $k$, i.e.,
+there is a probabilistic algorithm $\cM_0$ that
+on input a $k$-QBF $\varphi(\vy)$ and a positive integer $m$ (in unary),
+outputs a formula $\psi(\vy)$ such that 
+$\prarg {\psi(\vy) \ \text{is correct}}\geq 1-(1/2)^m$.
+
+For the induction step, 
+on input $(k+1)$-QBF $\varphi(\vy)$ and $m$,
+the algorithm $\cM$ works as follows.
+\begin{itemize}
+\item
+$\varphi(\vy)$ is of the form $\exists\vx\ \phi(\vx,\vy)$,
+where $\vx$ contains $n$ variables.
+
+For each $i=1,\ldots,8mn$, construct a formula $\alpha_i(\vy)$ as follows.
+\begin{itemize}
+\item
+Let $\beta_i(\vx,\vy)$ be the output of $\cM_0$ on input $\phi(\vx,\vy)$ and $(m+1)$.
+\item
+Randomly choose $k \in \{2,\ldots,n+1\}$.
+\item 
+Randomly choose a hash function $h\in \cH_{n,k}$, where $\cH_{n,k}$ is pair-wise independent.
+\item 
+Let $\alpha_i(\vy)$ denote the formula $\beta_i(\vx,\vy) \wedge (h(\vx)=0)$.
+\end{itemize}
+Then, output the formula $\psi(\vy)$ where $\psi(\vy)\defeq\bigsqcup_{i=1}^{8mn} \alpha_i(\vy)$.
+
+
+\item
+$\varphi(\vy)$ is of the form $\forall\vx\ \psi(\vx,\vy)$,
+where $\vx$ contains $n$ variables.
+
+For each $i=1,\ldots,8mn$, construct a formula $\alpha_i$,  as follows.
+\begin{itemize}
+\item
+Let $\beta_i(\vx,\vy)$ be the output of $\cM_0$ on input $\neg\psi(\vx,\vy)$ and $(m+1)$.
+\item
+Randomly choose $k \in \{2,\ldots,n+1\}$.
+\item 
+Randomly choose a hash function $h\in \cH_{n,k}$, where $\cH_{n,k}$ is pair-wise independent.
+\item 
+Let $\alpha_i(\vy)$ be the formula $\beta_i(\vx,\vy) \wedge (h(\vx)=0)$.
+\end{itemize}
+Then, output the formula $\psi(\vy)$ where $\psi(\vy)\defeq\sim\bigsqcup_{i=1}^{8mn} \alpha_i(\vy)$.
+
+\end{itemize}
+We now calculate the probability of the event that $\psi(\vy)$ is correct.
+
+We first consider the case that $\varphi(\vy)$ is of the form $\exists\vx \phi(\vx,\vy)$.
+By the induction hypothesis, $\prarg {\beta_i(\vx,\vy) \ \text{is correct}} \geq 1-(1/2)^{m+1}$,
+for each $i=1,\ldots,8mn$.
+Note that $\beta_i(\vx,\vy)$ is correct, if for every assignment $\va$ and $\vb$ on $\vx$ and $\vy$, respectively,
+$\beta_{i}(\va,\vb)\in \paritysat$ if and only if $\phi(\va,\vb)$ is a true QBF.
+
+Assume that $\beta_i(\vx,\vy)$ is correct.
+Let $\vb:\vy\to\{0,1\}$ be such that $\varphi(\vb)$ is true QBF.
+Thus, for every assignment $\va:\vx\to\{0,1\}$,
+if $\varphi(\va,\vb)$ is true QBF, $\beta_i(\va,\vb) \in \paritysat$.
+Otherwise, $\beta_i(\va,\vb)\notin \paritysat$.
+So, we only need to consider all those assignments $\va$ such that $\phi_i(\va,\vb)$ is true,
+which by the induction hypothesis, is equivalent to saying that $\beta_i(\va,\vb)\in \paritysat$.
+By applying the same technique as in Lemma~\ref{lem:valiant-vazirani} on the set of $\va$ such that $\beta_i(\va,\vb)\in \paritysat$,
+we randomly ``choose'' the hash function $h$ such that there is unique assignment $\va$ such that $h(\va)=0$,
+and the probability that we choose such $h$ is $\geq 3/(16n)$.
+Thus, we have:
+\begin{eqnarray*}
+\prarg {\beta_i(\vx,\vy)\wedge h(\vx)=0 \ \text{is correct}\ \mid\ \beta_i(\vx,\vy) \ \text{is correct}}
+& \geq & \frac{3}{16n}
+\end{eqnarray*}
+Thus,
+\begin{eqnarray*}
+\prarg {\psi_i(\vx,\vy) \ \text{is correct}} \ = \
+\prarg {\beta_i(\vx,\vy)\wedge h(\vx)=0 \ \text{is correct}}
+& \geq & \frac{3}{16n}\Big(1 - (1/2)^{m+1}\Big) 
+\\
+& \geq&  \frac{1}{8n}
+\end{eqnarray*}
+where in the last inequality we assume that $m\geq 1$.
+
+Note also that if $\vb:\vy\to\{0,1\}$ is an assignment such that $\varphi(\vb)$ is false QBF,
+then $\beta_i(\va,\vb) \notin \paritysat$, for every assignment $\va$ (since $\beta_i(\vx,\vy)$ is a correct formula).
+Thus, for any choice of $h$, $\beta_i(\vx,\vb) \wedge h(\vx)=0 \notin \paritysat$.
+
+Finally, note that $\bigsqcup_{i=1}^{8mn} \alpha_i(\vy)$ is correct if and only if one of $\alpha_i(\vy)$ is correct.
+Therefore,
+\begin{eqnarray*}
+\prargbig {\bigsqcup_{i=1}^{8mn} \alpha_i(\vy) \ \text{is not correct}}
+& = & \prarg {\alpha_i(\vy) \ \text{is not correct, for each}\ i=1,\ldots,8mn} 
+\\
+& \leq &
+\Big(1- 1/(8n)\Big)^{8mn}
+\ \leq \ (1/2)^m
+\end{eqnarray*}
+The proof for the case where $\varphi(\vy)$ is of the form $\forall\vx\ \phi(\vx,\vy)$ is similar.
+\end{proof}
+
+Combining Lemma~\ref{lem:sigmasat-pisat-paritysat} and the fact that
+$\sigmasat{k}$ and $\pisat {k}$ are $\sigmap {k}$- and $\pip {k}$-complete, for each $k\geq 1$,
+we have the following theorem.
+
+\begin{theorem}
+\label{theo:ph-paritysat}
+{\bf (Reductions from languages in $\pht$ to $\paritysat$)}
+For every language $L \in \pht$, there is a probabilistic polynomial time algorithm $\cM$ that
+on input $w$, outputs a formula $\psi$ such that the following holds, where $n=|w|$.
+\begin{itemize}
+\item
+If $w \in L$, then $\prarg { \psi \in \paritysat} \geq 1-(1/2)^n$.
+\item
+If $w \notin L$, then $\prarg { \psi \in \paritysat} \leq (1/2)^n$.
+\end{itemize}
+\end{theorem}
+
+\appendix
+
+\section*{Appendix}
+
+\section{Pair-wise independent collection of hash functions}
+\label{app:hash}
+ 
+\begin{definition}
+\label{def:hash}
+For $n,k \geq 1$,
+let $\cH_{n,k}$ be a collection of functions from $\{0,1\}^n$ to $\{0,1\}^k$.
+We say that $\cH_{n,k}$ is {\em pair-wise independent}, 
+if for every $x,x' \in \{0,1\}^n$ where $x\neq x'$ and for every $y,y'\in \{0,1\}^k$,
+the following holds.
+\begin{eqnarray*}
+\prdist {h \in \cH_{n,k}} {h(x)=y \ \wedge \ h(x')=y'} & = & 2^{-2k}
+\end{eqnarray*}
+\end{definition}
+
+In the following we show that $\cH_{n,k}$ exists.
+First, we show that $\cH_{n,n}$ exists.
+For every $n\geq 1$, for every $a,b \in \gf(2^n)$,
+define a function $h_{a,b}$ from $\{0,1\}^n$ to $\{0,1\}^n$ as follows.\footnote{$\gf(2^n)$ denotes a finite field with $2^n$ elements,
+where each element can be encoded as a 0-1 string of length $n$.}
+\begin{eqnarray*}
+h_{a,b}(x) & \defeq & xa+b
+\end{eqnarray*}
+
+\begin{theorem}
+\label{theo:hash-exists-a}
+The collection $\cH_{n,n} \defeq \{h_{a,b}: a,b \in \gf(2^n)\}$
+is pair-wise independent.
+\end{theorem}
+
+
+We have another candidate for pair-wise independent collection.
+For every $n\geq 1$, for every $A \in \{0,1\}^{n\times n}$ and $b \in \{0,1\}^{n\times 1}$,
+define a function $h_{A,b}$ from $\{0,1\}^{n\times 1}$ to $\{0,1\}^{n\times 1}$
+ as follows.\footnote{$\{0,1\}^{n\times n}$ denotes the set of 0-1 matrices with $n$ rows and $n$ columns
+and $\{0,1\}^{n\times 1}$ denotes the set of 0-1 column vectors of $n$ rows.
+Here the addition $+$ and multiplication $\cdot$ are defined over $\bbZ_2$.}
+\begin{eqnarray*}
+h_{A,b}(x) &\defeq & A x+b
+\end{eqnarray*}
+
+\begin{theorem}
+\label{theo:hash-exists-b}
+The collection $\cH_{n,n} \defeq \{h_{A,b} : A \in \{0,1\}^{n\times n}\ \text{and}\ b \in \{0,1\}^{n\times 1}\}$ 
+is pair-wise independent.
+\end{theorem}
+
+
+\begin{remark}
+Note that the existence of $\cH_{n,n}$ implies the existence of $\cH_{n,k}$.
+If $n<k$, then we can use $\cH_{k,k}$ and extend $n$ bit inputs to $k$
+by padding with zeros.
+If $n>k$, then we can use $\cH_{n,n}$ and reduce $n$ bit outputs to $k$
+by truncating the last $(n-k)$ bits.
+\end{remark}
+
+
+
+\begin{lemma}
+\label{lem:valiant-vazirani}
+{\bf (Valiant and Vazirani, 1986)}
+Let $\cH_{n,k}$ be a pair-wise independent hash function collection.
+Let $S\subseteq \{0,1\}^n$ such that $2^{k-2}\leq |S|\leq 2^{k-1}$.
+Then, the following holds.
+\begin{eqnarray*}
+\prdist {h \in \cH_{n,k}} {\textup{there is a unique}\ x \in S\ \textup{such that}\ h(x)=0^k} & \geq & \frac{3}{16}
+\end{eqnarray*}
+\end{lemma}
+\begin{proof}
+Let $N$ denote the number of $x$'s such that $h(x)=0$,
+where $h$ is randomly chosen from $\cH_{n,k}$ (with uniform distribution).
+We will calculate $\prarg {N=1}$.
+Note that:
+\begin{eqnarray*}
+\prarg {N=1} & = & \prarg {N\geq 1} \quad - \quad \prarg {N\geq 2}
+\\
+& = &
+\pr \Big[\ \bigcup_{x\in S} \cE_x\ \Big] \quad - \quad
+\pr \Big[\ \bigcup_{x,x'\in S \ \text{and}\ x\neq x'} \cE_{x}\cap \cE_{x'}\ \Big]
+\end{eqnarray*}
+where $\cE_x$ denotes the event that $h(x)=0$.
+In the following, we let $p = 2^{-k}$.
+
+Since $\cH_{n,k}$ is pairwise independent, 
+$\prarg {\cE_x}=p$ and $\prarg {\cE_x \cap \cE_{x'}}=p^2$, whenever $x\neq x'$.
+
+By the inclusion-exclusion principle, we have:
+\begin{eqnarray*}
+\pr \Big[\ \bigcup_{x\in S} \cE_x\ \Big]
+& \geq & 
+\sum_{x\in S} \prarg{\cE_x} \quad - \quad
+\
+\sum_{x,x'\in S \ \text{and}\ x\neq x'} \prarg {\cE_{x}\cap \cE_{x'}}
+\ = \
+|S|p \ - \ {|S| \choose 2}\cdot p^2
+\end{eqnarray*}
+By union bound, we have:
+\begin{eqnarray*}
+\pr \Big[\ \bigcup_{x,x'\in S \ \text{and}\ x\neq x'} \cE_{x}\cap \cE_{x'}\ \Big]
+& \leq & 
+\sum_{x,x'\in S \ \text{and}\ x\neq x'} \prarg{\cE_{x}\cap\cE_{x'}}
+\ \leq \
+{|S| \choose 2}\cdot p^2
+\end{eqnarray*}
+Combining both, we have:
+\begin{eqnarray*}
+\prarg{N=1} \ = \
+\prarg{N\geq 1} - \prarg{N\geq 2}
+& \geq &
+|S|p\ - \
+|S|^2p^2 
+\end{eqnarray*}
+Since $1/4 \leq |S|p \leq 1/2$,
+a straightforward calculation shows that $|S|p - |S|^2p^2 \geq 3/16$.
+\end{proof}
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

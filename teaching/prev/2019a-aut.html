@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>CSIE 3110: Formal languages and automata theory</title>
+
+<style>
+table {border-collapse: collapse;}
+</style>
+
+</head>
+
+
+
+<h1><b>CSIE 3110: Formal languages and automata theory</b></h1>
+
+
+<TABLE CELLPADDING=0 CELLSPACING=0>
+	<TD>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	</TD>
+	
+	<TD>
+
+	<h3>Instructor</h3> 
+	<ul style="line-height:1.4;">
+		<li>Name: Tony Tan</li>
+		<li>Room: CSIE 516</li>
+		<li>Office hour: By appointment via email</li>
+		<li>Email: tonytan@csie.ntu.edu.tw</li>
+		<li><a href="../..">Personal website</a></li>
+	</ul>
+
+	<h3>Venue and time</h3>
+	<ul style="line-height:1.4;">
+		<li>Time: Tuesday and Friday, 10:20-13:00</li>
+		<li>There will be around 15 minute break in the middle of each lesson</li>
+		<li>Room: CSIE 104 (class 2) and CSIE 102 (class 1)</li>
+	</ul>
+
+	<h3>Teaching assistants</h3>
+	<ul style="line-height:1.4;">
+		<li>TA mailing list: <a href=mailto:automata@csie.ntu.edu.tw?subject="Automata-course">automata@csie.ntu.edu.tw</a>.</li>
+		<li>If there is an issue that does not need a specific TA to settle, please write to TA mailing list above.</li>
+		<li>鄭士驤 (Cheng Shih Hsiang), r08922047@ntu.edu.tw, r08922047@csie.ntu.edu.tw, TA hour: Wednesday, 13:00-14:00, room 217.</li>
+		<li>林廷衛 (Lin Tingwei), r08922089@ntu.edu.tw, r08922089@csie.ntu.edu.tw, TA hour: Monday, 16:00-17:00, room 401.</li>
+		<li>黃世瑋 (Huang Shiwei), r07944035@ntu.edu.tw, r07944035@csie.ntu.edu.tw, TA hour: Wednesday, 16:00-17:00, room 401.</li>
+		<li>If needed, you may try to arrange another time slot with the TA directly.</li>
+	</ul>
+
+	<h3>Recommended textbooks</h3>
+	<ul style="line-height:1.4;">
+		<li><i>Introduction to the Theory of Computation</i> by M. Sipser.</li>
+		<li><i>Introduction to Automata Theory, Languages, and Computation</i> by J. Hopcroft and J. Ullman, 1st edition.</li>
+	</ul>	
+
+	<h3>Administrations</h3>
+	<ul style="line-height:1.4;">
+		<li>All notes and homeworks (in both pdf and tex files) will be posted here.</li>
+		<li>To compile the tex file, you will need this file: <a href="mysty.sty">mysty.sty</a></li>
+		<li>There will be four homeworks, each weighs 10%.</li>
+		<li>Midterm and final exams weigh 30% each.</li>
+		<li>The instructions on homework submissions will be provided in each homework.</li>
+	</ul>
+
+
+
+	<h3>Schedule (tentative)</h3>
+
+	<table border="1" style="width:130%;">
+<thead>
+	<tr height="30">
+		<th>Week</th>
+		<th>Dates</th>
+		<th>Lesson</th>
+		<th>Remark</th>
+	</tr>
+</thead>
+
+	<tr height="3"></tr>
+
+	<tr height="30">
+		<th colspan="4" bgcolor="#D3D3D3">Part 0: Preliminaries</td> 
+	</tr>
+
+  	<tr height="30">
+		<th bgcolor="#D3D3D3">I</th> 
+    		<td bgcolor="#D3D3D3">10 and 13 Sep.</td>
+    		<td bgcolor="#D3D3D3">Lesson 0. Preliminaries</td> 
+		<th bgcolor="#D3D3D3">--</th>
+  	</tr>
+
+	<tr height="3"></tr>
+
+	<tr height="30">
+		<th colspan="4" bgcolor="#D3D3D3">Part 1: Regular languages</th> 
+	</tr>
+
+  	<tr height="30">
+		<th bgcolor="#D3D3D3">II</th> 
+    		<td bgcolor="#D3D3D3">17 and 20 Sep.</td>
+    		<td bgcolor="#D3D3D3">Lesson 1.a. Finite state automata</td> 
+		<th bgcolor="#D3D3D3">--</th>
+  	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">III</th> 
+		<td bgcolor="#D3D3D3">24 and 27 Sep.</td>
+		<td bgcolor="#D3D3D3">Lesson 1.b. Pumping lemma and regular expressions</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">IV</th> 
+		<td bgcolor="#D3D3D3">1 and 4 Oct.</td>
+		<td bgcolor="#D3D3D3">Lesson 1.c. Review</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="3"></tr>
+
+	<tr height="30">
+		<th colspan="4" bgcolor="#D3D3D3">Part 2: Context-free languages</th> 
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">V</th> 
+		<td bgcolor="#D3D3D3">8 and 11 Oct.</td>
+		<td bgcolor="#D3D3D3">Lesson 2.a. Context-free grammars and pumping lemma</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">VI</th> 
+		<td bgcolor="#D3D3D3">15 and 18 Oct.</td>
+		<td bgcolor="#D3D3D3">Lesson 2.b. Push-down automata</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">VII</th> 
+		<td bgcolor="#D3D3D3">22 and 25 Oct.</td>
+		<td bgcolor="#D3D3D3">Lesson 2.b. Push-down automata</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">VIII</th> 
+		<td bgcolor="#D3D3D3">29 Oct. and 1 Nov.</td>
+		<td bgcolor="#D3D3D3">Lesson 2.c. Review</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="3"></tr>
+
+	<tr height="30">
+		<th colspan="4" bgcolor="#D3D3D3">Reading week and midterm exam</th> 
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">IX</th> 
+		<td bgcolor="#D3D3D3">5 and 8 Nov.</td>
+		<td bgcolor="#D3D3D3">Reading week</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">X</th> 
+		<td bgcolor="#D3D3D3">12 Nov.</td>
+		<td bgcolor="#D3D3D3"><font color="red"><b>Midterm exam:</b></font> Tuesday, 12 November, 18:30--20:30, room: 101, 102, 103, 104.</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="3"></tr>
+
+	<tr height="30">
+		<th colspan="4" bgcolor="#D3D3D3">Part 3: Decidable and undecidable languages</th> 
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XI</th> 
+		<td bgcolor="#D3D3D3">19 and 22 Nov.</td>
+		<td bgcolor="#D3D3D3">Lesson 3.a. Turing machines and decidable languages</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XII</th> 
+		<td bgcolor="#D3D3D3">26 and 29 Nov.</td>
+		<td bgcolor="#D3D3D3">Lesson 3.b. Variants of Turing machines</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XIII</th> 
+		<td bgcolor="#D3D3D3">3 and 6 Dec.</td>
+		<td bgcolor="#D3D3D3">Lesson 3.c. Universal Turing machines and halting problems</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XIV</th> 
+		<td bgcolor="#D3D3D3">10 and 13 Dec.</td>
+		<td bgcolor="#D3D3D3">Lesson 3.d. Reducibility</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="3"></tr>
+
+	<tr height="30">
+		<th colspan="4" bgcolor="#D3D3D3">Part 4: Basic complexity theory</th> 
+	</tr>
+	
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XV</th> 
+		<td bgcolor="#D3D3D3">17 and 20 Dec.</td>
+		<td bgcolor="#D3D3D3">Lesson 4.a. Basic complexity classes</td>
+		<th bgcolor="#D3D3D3">--</th> 
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XVI</th> 
+		<td bgcolor="#D3D3D3">24 and 27 Dec.</td>
+		<td bgcolor="#D3D3D3">Lesson 4.b. NP-complete languages</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+
+	<tr height="3"></tr>
+
+	<tr height="30">
+		<th colspan="4" bgcolor="#D3D3D3">Reading week and final exam</th> 
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XVII</th> 
+		<td bgcolor="#D3D3D3">31 Dec. and 3 Jan.</td>
+		<td bgcolor="#D3D3D3">Reading week</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	<tr height="30">
+		<th bgcolor="#D3D3D3">XVIII</th> 
+		<td bgcolor="#D3D3D3">7 Jan.</td>
+		<td bgcolor="#D3D3D3"><font color="red"><b>Final exam:</b></font> Tuesday, 7 January, 19:00--21:00, room: 101, 102, 103, 104.</td>
+		<th bgcolor="#D3D3D3">--</th>
+	</tr>
+
+	
+	</table>
+
+
+
+
+
+
+
+	</TD>
+
+</TABLE>
+
+<br></br>
+
+</html>

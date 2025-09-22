@@ -1,0 +1,193 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{10}
+\renewcommand{\lessontitle}{Interactive proofs}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+\externaldocument{../lesson-07/2021b-toc-note-07}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} The class $\ip$, $\ma$ and $\am$.
+
+\section{The class $\ip$}
+
+Let $\Sigma=\{0,1\}$ and $\#$ be a symbol.
+Let $P:(\Sigma\cup\{\#\})\to\Sigma^*$ be an {\em arbitrary} function.
+Let $V$ be a probabilistic TM whose inputs are of the form:
+$$
+w\ \#\ u_1\ \#\ v_1\ \#\ u_2\ \# \ v_2\ \#\ \cdots \ \# \ u_{m}\ \# \ v_{m} 
+$$
+where $w,u_1,v_1,\ldots,u_m,v_m$ are all strings from $\Sigma^*$.
+The outcome of $V$ can be {\em accept}, {\em reject} or ``send a string $u$ to $P$.''
+
+The function $P$ is usually called the {\em prover} and $V$ the {\em verifier}.
+The interaction between $P$ and $V$, denoted by $(P,V)$, on input word $w\in \Sigma^*$ consists of rounds defined as follows.
+
+\vspace{0.3cm}
+\noindent
+(Round~1:)
+\begin{itemize}
+\item
+Run $V$ on $w$.
+
+If it accepts/rejects, then the interaction stops.
+
+If the outcome is ``sends a string $u_1$ to $P$,''
+then $V$ sends $u_1$ to $P$.
+
+\item 
+Let $P(w\#u_1)=v_1$.
+
+Then, $P$ sends $v_1$ to $V$, and the interaction continues to round~2.
+\end{itemize}
+(Round~2:)
+\begin{itemize}
+\item
+Run $V$ on $w\#u_1\#v_1$.
+
+If it accepts/rejects, then the interaction stops.
+
+If the outcome is ``sends a string $u_2$ to $P$,''
+then it sends $u_2$ to $P$.
+
+\item 
+Let $P(w\#u_1\#v_1\#u_2)=v_2$.
+
+Then, $P$ sends $v_2$ to $V$, and the interaction continues to round~3.
+\end{itemize}
+and so on. The interaction continues until $V$ accepts/rejects, in which case
+we say that the interaction $(P,V)$ accepts/rejects $w$.
+
+On each round $i$, the verifier $V$ starts with its initial state
+and the position of its head is on the first position of $w\# u_1 \# v_1 \#\cdots  \#  u_{i-1}\# v_{i-1}$.
+On each round $i$, we call the string $u_i$ {\em the verifier's query} 
+and $v_i$ {\em the prover's reply}.
+
+\begin{remark}
+We usually assume that $V$ runs in polynomial time in {\em the length of the input word $w$}.
+That is, there is a polynomial $p(n)$ such that on each round $i$
+the run time of $V$ on $w\# u_1 \# v_1 \#\cdots  \#  u_{i-1}\# v_{i-1}$
+is bounded by $p(|w|)$.
+
+In this case we may assume that $V$ always tosses the random string $r$ before round~1 starts
+and in each round $i$, the verifier $V$ is a deterministic TM with input 
+$(w,r)\# u_1 \# v_1 \#\cdots  \#  u_{i-1}\# v_{i-1}$.
+Moreover, the length of each reply $v_i$ is also bounded by the $p(|w|)$
+and so is the number of rounds in the interaction.  
+
+Note also that the prover $P$ does not know the random string $r$.
+He only knows the input word and the queries sent by the verifier. 
+\end{remark}
+
+\begin{definition}
+\label{def:verifier-decide}
+A (polynomial time) verifier $V$ decides a language $L$,
+if for every word $w\in \Sigma^*$, the following holds.
+\begin{itemize}
+\item
+If $w\in L$, then there is a prover $P$ such that $\prdist {r} {(P,V)\ \text{accepts}\ w} \geq 2/3$.
+\item
+If $w\notin L$, then for every prover $P$, $\prdist {r} {(P,V)\ \text{accepts}\ w} \leq 1/3$.
+\end{itemize}
+The class $\ip$ is defined as
+$\ip \ \defeq \ \{L \mid \text{there is a polynomial time verifier}\ V \ \text{that decides}\ L\}$.
+\end{definition}
+
+
+
+\begin{example}
+We will consider the interactive proofs for following two languages.
+\begin{itemize}
+\item
+$\noniso \defeq \{ (G_0,G_1) \mid \text{$G_0$ is not isomorphic to $G_1$}\}$.
+\item
+$\nonsq \defeq \{ (a,p) \mid a \not\equiv b^2 \pmod p\ \text{for some $b$ where $p$ is a prime}\}$.
+\end{itemize}
+\end{example}
+
+
+\begin{lemma}
+\label{lem:ip-ps}
+$\ip\subseteq \ps$.
+\end{lemma}
+
+
+\section{The class $\ma$ and $\am$}
+
+\paragraph*{The class $\am$.}
+The {\em Arthur-Merlin} ($\am$) class is defined as the class $\ip$
+with additional restrictions.
+On input $w$, it does the following.
+\begin{itemize}
+\item
+$V$ generates a random string $r$ and sends it to $P$.
+\item 
+$P$ replies with a string $p$.
+\item 
+$V$ runs a deterministic computation on input $w,r,p$.
+
+That is, $V$ is not allowed to use any random string except $r$.
+\end{itemize}
+
+
+\paragraph*{The class $\ma$.}
+The {\em Merlin-Arthur} ($\ma$) class is defined as the class $\ip$
+with additional restrictions.
+On input $w$, it does the following.
+\begin{itemize}
+\item 
+$P$ sends a string $p$ to $V$.
+\item 
+Run $V$ on input $w,p$, where $V$ is a polynomial time PTM.
+
+Here $V$ is allowed to generate some random string.
+\end{itemize}
+
+Note that in the class $\am$ and $\ma$ the interaction consists of only one round.
+It can be easily generalized to multiple rounds.
+
+
+
+\begin{theorem}
+\label{theo:am-ma-ph}~
+\begin{itemize}
+\item 
+$\am\subseteq \sigmap {3}$.
+\item
+$\ma\subseteq \sigmap {2}$.
+\end{itemize}
+\end{theorem}
+
+Theorem~\ref{theo:am-ma-ph} can be proved using the same technique as Theorem~\ref{theo:bpp-ph}.
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

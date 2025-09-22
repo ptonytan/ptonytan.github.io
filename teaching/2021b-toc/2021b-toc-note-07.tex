@@ -1,0 +1,209 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{7}
+\renewcommand{\lessontitle}{Probabilistic Turing machines}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+\externaldocument{../lesson-06/2021b-toc-note-06}
+\externaldocument{../lesson-00/2021b-toc-note-00}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} The notion of probabilistic/randomized Turing machines and some classical results.
+
+\paragraph*{Probabilistic Turing machines.}
+A {\em probabilistic Turing machine} (PTM) is system $\cM = \langle \Sigma,\Gamma,Q,q_0,\qacc,\qrej,\delta\rangle$
+defined like the NTM,
+with the difference that $\delta\subseteq (Q-\{\qacc,\qrej\})\times\Gamma \ \times Q\times \Gamma\times \{\Left,\Right\}$ 
+is now a relation such that for every $(p,\sigma)\in (Q-\{\qacc,\qrej\})\times\Gamma$,
+there are exactly two transitions that can be applied:
+\begin{eqnarray*}
+(p,\sigma)\to (q_1,\sigma_1,\Move_1) & \text{and} &
+(p,\sigma)\to (q_2,\sigma_2,\Move_2)
+\end{eqnarray*}
+and the probability that each transition is applied is $1/2$.
+Intuitively, when it is in state $p$ reading symbol $\sigma$,
+$\cM$ tosses an unbiased coin to decide whether to apply $(q_1,\sigma_1,\Move_1)$ or $(q_2,\sigma_2,\Move_2)$.
+On an input word $w$, the probability that $\cM$ accepts/rejects $w$ is defined
+over all possible coin tossing.
+
+Similar to DTM/NTM, we say that {\em $\cM$ runs in time $f(n)$}, if
+for every word $w$, every run of $\cM$ on $w$ has length $\leq f(|w|)$.
+We say that {\em $\cM$ runs in polynomial time}, if there is a polynomial $p(n)=\poly(n)$
+such that $\cM$ runs in time $p(n)$.
+In this case we also say that $\cM$ is a {\em polynomial time PTM}.
+
+The class $\bpp$ is defined as follows.
+A language $L$ is in the class $\bpp$, if there a polynomial time PTM $\cM$ such that
+for every input word $x$, the following holds.
+\begin{eqnarray*}
+\prarg { \cM(x) = L(x) } & \geq & 2/3
+\end{eqnarray*}
+Here we treat a language $L$ as a function $L:\{0,1\}^*\to \{0,1\}$,
+where $L(x)=1$, if $x\in L$,
+and $L(x)=0$, if $x\notin L$. 
+Similarly, we treat TM $\cM$ as a function $\cM:\{0,1\}^*\to \{0,1\}$,
+where $\cM(x)=1$, if $\cM$ accepts $x$,
+and $\cM(x)=0$, if $\cM$ rejects $x$.
+
+Note that $\bpp$ is closed under complement, union and intersection.
+
+\begin{remark}
+Alternatively, we can define the class $\bpp$ as follows.
+A language $L$ is in the class $\bpp$, if 
+there is a polynomial $q(n)$ and a polynomial time DTM $\cM$
+such that for every $x\in \{0,1\}^*$, the following holds.
+\begin{eqnarray*}
+\prdist {r\in \{0,1\}^{q(|x|)}} { \cM(x,r)=L(x) } & \geq & 2/3
+\end{eqnarray*}
+Note that the DTM $\cM$ takes as input $(x,r)$.
+Intuitively, it can be viewed as a PTM that on input~$x$, 
+first randomly choose a string $r$ of length $q(|x|)$, then run DTM $\cM$ on $(x,r)$.
+
+Note the similarity with the alternative definition of $\npt$ (Def.~\ref{def:np-b}),
+where an NTM first guesses a certificate string $r$,
+and then runs a DTM for verification.
+\end{remark}
+
+
+
+
+
+\begin{theorem}
+{\bf (Error reduction)}
+Let $L \in \bpp$.
+Then, for every $d\geq 1$,
+there is a polynomial time PTM $\cM$ such that for every input word $x$:
+\begin{eqnarray*}
+\hspace{3cm}\prarg {\cM(x)=L(x)} & \geq & 1- 2^{-\alpha |x|^d}\hspace{3cm}(\text{for some fixed}\ \alpha>0)
+\end{eqnarray*}
+\end{theorem}
+
+\begin{theorem}
+\label{theo:adleman-bpp-circuit}
+{\bf (Adleman 1978)}
+$\bpp \subseteq \ppoly$.
+\end{theorem}
+
+Theorem~\ref{theo:adleman-bpp-circuit} and Theorem~\ref{theo:karp-lipton-circuit} imply that
+if $\sat \in \bpp$, then $\pht$ collapses to $\sigmap {2}$.
+
+\begin{theorem}
+\label{theo:bpp-ph}
+{\bf (Sipser, G\'acs, Lautemann 1983)}
+$\bpp \subseteq \sigmap {2} \cap \pip {2}$.
+\end{theorem}
+
+\paragraph*{One-sided error PTM.}
+The class $\rp$ is defined as follows.
+A language $L$ is in the class $\rp$, if there a polynomial time PTM $\cM$ such that
+for every input word $x$, the following holds.
+\begin{itemize}
+\item
+If $x\in L$, then $\prarg {\cM(x)=1} \geq 2/3$.
+\item
+If $x\notin L$, then $\prarg {\cM(x)=0} =1$.
+\end{itemize}
+Note that $\cM$ is never wrong when the input $x\notin L$,
+hence, the name {\em one-sided}.
+The class $\corp$ is defined as $\corp \defeq \{L : \{0,1\}^*\setminus L \in \rp\}$.
+
+\paragraph*{Zero error PTM.}
+A PTM $\cM$ for a language $L$ is a zero error PTM, if it never errs, 
+i.e., for every input word $x$, $\prarg {\cM(x)=L(x)}=1$.
+Now for a PTM $\cM$ and input word $x$,
+we can define a  random variable $T_{\cM,x}$ to denote the run time of $\cM$ on $x$,
+where the probability distribution is $\prarg {T_{\cM,x}=t} = p$,
+if with probability $p$ over the random strings of $\cM$ on input $x$, it halts in $t$ steps .
+
+The class $\zpp$ is defined as follows.
+A language $L$ is in $\zpp$, if there is a polynomial $q(n)=\poly(n)$
+and a zero error PTM $\cM$ for $L$ such that for every input word $x$,
+$\Exp [T_{\cM,x}] \leq q(|x|)$.
+
+The algorithms for languages in $\bpp$/$\rp$/$\corp$ are also called {\em Monte Carlo} algorithms,
+and those for languages in $\zpp$ are called {\em Las Vegas} algorithms.
+
+
+\appendix
+
+\section*{Appendix}
+
+
+\section{Useful inequalities}
+\label{app:inequalities}
+
+\paragraph*{Inclusion-exclusion principle:}
+Let $\cE_1,\ldots,\cE_m$ be some $m$ events.
+Then, the following holds.
+\begin{eqnarray*}
+\pr \Big[ \bigcup_{i=1}^m \cE_i \Big] & = & 
+\sum_{i=1}^{m} \prarg {\cE_i} - 
+\sum_{1\leq i_1 < i_2 \leq m} \prarg {\cE_{i_1}\cap \cE_{i_2}} +
+\sum_{1\leq i_1 < i_2 < i_3 \leq m} \prarg {\cE_{i_1}\cap \cE_{i_2}\cap \cE_{i_3}} - 
+\cdots
+\end{eqnarray*}
+From here, we also obtain the so called {\em union bound}:
+\begin{eqnarray*}
+\pr \Big[ \bigcup_{i=1}^m \cE_i \Big] & \leq & \sum_{i=1}^{m} \prarg {\cE_i} 
+\end{eqnarray*}
+
+
+\paragraph*{Markov inequality:}
+Let $X$ be a non-negative random variable with expectation $\mu$.
+Then, for every real $c>0$, the following holds.
+\begin{eqnarray*}
+\prarg {X \geq c\mu} & \leq & 1/c
+\end{eqnarray*}
+Markov inequality is often also called {\em averaging argument}.
+
+\paragraph*{Chebyshev inequality:}
+Let $X$ be a random variable with expectation $\mu$ and variance $\sigma^2$.
+Then, for every real $c>0$, the following holds.
+\begin{eqnarray*}
+\pr \big[\ |X -\mu |\geq c\sigma\ \big] & \leq & 1/c^2
+\end{eqnarray*}
+
+
+\paragraph*{Chernoff inequality:}
+Let $X_1,\ldots,X_m$ be (independent) 0,1 random variables.
+Suppose for every $1\leq i \leq m$,
+$\pr[X_i=1]=p$, for some $p > 1/2$.
+Let $X\defeq \sum_{i=1}^m X_i$.
+Then, the following holds.
+\begin{eqnarray*}
+\hspace{2cm}
+\pr \Big[\ X > \big\lfloor m/2 \big\rfloor \ \Big] & \geq & 1 - 2^{-\alpha m}\hspace{2cm}\text{where} \ \alpha = \frac{\log_2 e}{2p}\Big(p-\frac{1}{2}\Big)^2
+\end{eqnarray*}
+
+
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

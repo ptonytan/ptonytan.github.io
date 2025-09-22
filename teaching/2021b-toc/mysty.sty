@@ -1,0 +1,331 @@
+
+
+\addtolength{\hoffset}{-1.7cm}
+\addtolength{\voffset}{-1.5cm}
+\addtolength{\textwidth}{3.4cm}
+\addtolength{\textheight}{2.5cm}
+
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyvrb}
+\usepackage{multirow}
+\usepackage{relsize}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{arrows, petri,topaths}
+%\usepackage{tkz-berge}
+
+\usepackage[T1]{fontenc}
+
+\usepackage[noend]{algorithmic}
+\usepackage{algorithm}
+\renewcommand{\thealgorithm}{}
+\floatname{algorithm}{}
+
+%%%%%%%%%%%%%for graph
+\usetikzlibrary{automata,positioning}
+\tikzset{initial text={}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+
+\newcounter{mycount}
+
+\usepackage{lastpage}  
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\lhead{\tiny \underline{CSIE 5046: Topics in complexity theory (Sem. 2, 2021/2022)}}
+\cfoot{\footnotesize \thepage/\pageref{LastPage}}
+\rhead{\tiny \underline{\fulltitle}}
+
+\newcommand{\lesson}{0}
+\newcommand{\lessontitle}{To be defined on each lesson}
+\newcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\renewcommand{\themycount}{\lesson.\arabic{mycount}}
+
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% LIST OF ENVIRONMENTS %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{defn}[mycount]{Definition}
+\newtheorem{eg}[mycount]{Example}
+\newtheorem{rem}[mycount]{Remark}
+
+\newtheorem{theorem}[mycount]{Theorem}
+\newtheorem{lemma}[mycount]{Lemma}
+\newtheorem{proposition}[mycount]{Proposition}
+\newtheorem{corollary}[mycount]{Corollary}
+\newtheorem{problem}[mycount]{Problem}
+\newtheorem{question}[mycount]{Question}
+
+\newtheorem{claim}{Claim}
+\newtheorem{fact}{Fact}
+\newtheorem{observation}{Observation}
+
+\newenvironment{definition}{\defn \em }
+ {\vspace{0.9 em}} 
+
+\newenvironment{remark}{\rem \em}{\vspace{0.5 em}}
+
+\newenvironment{example}{\eg \em}{\vspace{0.3 em}}{\vspace{0.5 em}}
+
+\newenvironment{proof}
+{\noindent {\bf Proof.}}{\QED {\vspace{1.0 em}}}
+
+\newenvironment{note}
+{\vspace{0.3 em} \noindent {\bf Note.}}{\vspace{0.5 em}}
+
+%\def\squareforqed{$\blacksquare$}
+\def\squareforqed{$\qed$}
+\def\QED{\ifmmode\squareforqed\else{\unskip\nobreak\hfil
+\penalty50\hskip1em\null\nobreak\hfil\squareforqed
+\parfillskip = 0pt\finalhyphendemerits = 0\endgraf}\fi}
+
+\newenvironment{consequence}
+{\vspace{0.5 em} \noindent {\bf Corollary \em} }{\vspace{0.5 em}}
+
+\def\filledbox{\vrule height 1.8ex width .8ex depth 0ex }
+\newcommand{\qed}{\filledbox}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% MACROS FOR SYMBOLS %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\ans}{\mbox{\bf Ans:}}
+
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+
+\newcommand{\myT}{{\sf true}}
+\newcommand{\myF}{{\sf false}}
+
+\newcommand{\acc}{{\sf ACCEPT}}
+\newcommand{\rej}{{\sf REJECT}}
+
+\newcommand{\qeq}{\stackrel{\textsf{\tiny ?}}{=}}
+\newcommand{\defeq}{\stackrel{\textsf{\tiny def}}{=}}
+
+
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cZ}{\mathcal{Z}}
+
+
+\newcommand{\va}{\bar{a}}
+\newcommand{\vb}{\bar{b}}
+\newcommand{\vc}{\bar{c}}
+\newcommand{\vd}{\bar{d}}
+\newcommand{\vm}{\bar{m}}
+\newcommand{\vp}{\bar{p}}
+\newcommand{\vt}{\bar{t}}
+\newcommand{\vv}{\bar{v}}
+\newcommand{\vu}{\bar{u}}
+\newcommand{\vw}{\bar{w}}
+\newcommand{\vx}{\bar{x}}
+\newcommand{\vy}{\bar{y}}
+\newcommand{\vz}{\bar{z}}
+
+\newcommand{\vZ}{\bar{Z}}
+
+\newcommand{\bbF}{\mathbb{F}}
+\newcommand{\bbN}{\mathbb{N}}
+\newcommand{\bbQ}{\mathbb{Q}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbZ}{\mathbb{Z}}
+
+
+\newcommand{\sA}{\textsf{A}}
+\newcommand{\sE}{\textsf{E}}
+\newcommand{\sL}{\textsf{L}}
+\newcommand{\sQ}{\textsf{Q}}
+
+\newcommand{\sfL}{\textsf{\underline{L}}}
+\newcommand{\sfR}{\textsf{\underline{R}}}
+\newcommand{\sfW}{\textsf{\underline{W}}}
+
+\renewcommand{\iff}{\leftrightarrow}
+
+\newcommand{\Left}{\texttt{Left}}
+\newcommand{\Right}{\texttt{Right}}
+\newcommand{\Stay}{\texttt{Stay}}
+\newcommand{\Write}{\texttt{Write}}
+\newcommand{\Move}{\texttt{Move}}
+
+
+\newcommand{\blank}{\sqcup}
+\newcommand{\qacc}{q_{\textsf{acc}}}
+\newcommand{\qrej}{q_{\textsf{rej}}}
+\newcommand{\tblank}{\tilde{\blank}}
+\newcommand{\qquery}{q_{\textsf{query}}}
+\newcommand{\qyes}{q_{\textsf{yes}}}
+\newcommand{\qno}{q_{\textsf{no}}}
+
+\newcommand{\floor}[1]{\lfloor#1\rfloor}
+
+\newcommand{\ttL}{\texttt{L}}
+\newcommand{\ttR}{\texttt{R}}
+\newcommand{\ttS}{\texttt{S}}
+\newcommand{\bcomma}{\texttt{,}}
+
+\newcommand{\per}{\textup{per}}
+\newcommand{\poly}{\textsf{poly}}
+\newcommand{\unary}{\textsf{unary}}
+
+\newcommand{\gf}{\textsf{GF}}
+
+\newcommand{\height}{\textsf{\textup{height}}}
+\newcommand{\depth}{\textsf{\textup{depth}}}
+\newcommand{\stars}{\textsf{\textup{stars}}}
+
+\newcommand{\pr}{\mathbf{Pr}}
+\newcommand{\prarg}[1]{\pr [\ #1 \ ]}
+\newcommand{\prargbig}[1]{\pr \Big[\ #1 \ \Big]}
+\newcommand{\prdist}[2]{\pr_{#1}[\ #2\ ]}
+\newcommand{\Exp}{\mathbf{Exp}}
+
+%%%%%% complexity class 
+
+\newcommand{\class}[1]{\textbf{\textup{#1}}}
+
+\newcommand{\size}{\textsc{size}}
+
+\newcommand{\dtime}{\textsc{Dtime}}
+\newcommand{\ntime}{\textsc{Ntime}}
+\newcommand{\atime}{\textsc{Atime}}
+
+\newcommand{\dspace}{\textsc{Dspace}}
+\newcommand{\nspace}{\textsc{Nspace}}
+\newcommand{\aspace}{\textsc{Aspace}}
+\newcommand{\conspace}{\textrm{\textup{co\textsc{Nspace}}}}
+
+\newcommand{\ls}{\class{L}}
+\newcommand{\nls}{\class{NL}}
+\newcommand{\conls}{\class{coNL}}
+\newcommand{\pt}{\class{P}}
+\newcommand{\npt}{\class{NP}}
+\newcommand{\conpt}{\class{coNP}}
+\newcommand{\ps}{\class{PSPACE}}
+\newcommand{\nps}{\class{NPSPACE}}
+\newcommand{\conps}{\class{coNPSPACE}}
+\newcommand{\expt}{\class{EXP}}
+\newcommand{\nexpt}{\class{NEXP}}
+\newcommand{\aexpt}{\class{AEXP}}
+\newcommand{\conexpt}{\class{coNEXP}}
+\newcommand{\exps}{\class{EXPSPACE}}
+
+\newcommand{\sharpp}{\sharp\pt}
+\newcommand{\psharpp}{\pt^{\sharpp}}
+
+\newcommand{\sigmap}[1]{\mathbf{\Sigma}^{p}_{#1}}
+\newcommand{\pip}[1]{\mathbf{\Pi}^{p}_{#1}}
+\newcommand{\pht}{\class{PH}}
+
+\newcommand{\als}{\class{AL}}
+\newcommand{\apt}{\class{AP}}
+\newcommand{\aps}{\class{APSPACE}}
+
+\newcommand{\fpt}{\class{FP}}
+\newcommand{\ppt}{\class{PP}}
+
+\newcommand{\ppoly}{\pt_{\textup{\!\!/\poly}}}
+\newcommand{\nc}{\class{NC}}
+\newcommand{\ac}{\class{AC}}
+
+\newcommand{\bpp}{\class{BPP}}
+\newcommand{\zpp}{\class{ZPP}}
+\newcommand{\rp}{\class{RP}}
+\newcommand{\corp}{\class{coRP}}
+
+\newcommand{\ip}{\class{IP}}
+\newcommand{\ma}{\class{MA}}
+\newcommand{\am}{\class{AM}}
+
+\newcommand{\paritypt}{\oplus\pt}
+
+
+%%%%%% problem names
+
+\newcommand{\prob}[1]{\textsf{\textup{#1}}}
+
+\newcommand{\cycle}{\prob{CYCLE}}
+\newcommand{\reach}{\prob{REACH}}
+\renewcommand{\path}{\prob{PATH}}
+
+\newcommand{\circuiteval}{\prob{CIRCUIT-EVAL}}
+
+\newcommand{\sat}{\prob{SAT}}
+\newcommand{\threesat}{\prob{3-SAT}}
+\newcommand{\threecolor}{\prob{3-COL}}
+\newcommand{\indset}{\prob{IND-SET}}
+\newcommand{\clique}{\prob{CLIQUE}}
+\newcommand{\vertexcover}{\prob{VERT-COVER}}
+\newcommand{\domset}{\prob{DOM-SET}}
+
+\newcommand{\noniso}{\prob{NON-ISO}}
+\newcommand{\nonsq}{\prob{NON-SQ}}
+
+
+\newcommand{\sigmasat}[1]{\Sigma_{#1}\textsf{\textup{-SAT}}}
+\newcommand{\pisat}[1]{\Pi_{#1}\textsf{\textup{-SAT}}}
+
+\newcommand{\tqbf}{\prob{TQBF}}
+
+\newcommand{\parity}{\prob{PARITY}}
+
+\newcommand{\usat}{\prob{USAT}}
+
+\newcommand{\halt}{\prob{HALT}}
+\newcommand{\pcp}{\prob{PCP}}
+
+\newcommand{\sharpsat}{\sharp\sat}
+\newcommand{\sharpcycle}{\sharp\cycle}
+
+\newcommand{\perm}{\prob{PERM}}
+\newcommand{\zerooneperm}{\prob{0|1-PERM}}
+
+\newcommand{\paritysat}{\oplus\sat}
+
+
+%%%%%%%%% Algorithm macro
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Task:}}
+
+\newcommand{\algoe}[1]{\langle \texttt{#1} \rangle}
+\newcommand{\algoi}[1]{\text{\bf #1}}
+
+%%%%%%%%% Some labels
+
+\newcommand{\sfRed}{\textsf{Red}}
+\newcommand{\sfBlue}{\textsf{Blue}}
+\newcommand{\sfGreen}{\textsf{Green}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% END MACROS FOR SYMBOLS %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+

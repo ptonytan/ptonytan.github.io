@@ -1,0 +1,123 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{4}
+\renewcommand{\lessontitle}{The polynomial hierarchy}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+\externaldocument{../lesson-02/2021b-toc-note-02}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} The polynomial hierarchy.
+
+\vspace{0.5cm}
+
+For every integer $i\geq 1$, the class $\sigmap {i}$ is defined as follows.
+A language $L \subseteq \{0,1\}^*$ is in $\sigmap {i}$,
+if there is a polynomial $q(n)$ and a polynomial time DTM $\cM$
+such that for every $w\in \{0,1\}^*$,
+$w\in L$ if and only if the following holds.
+\begin{eqnarray}
+\label{eq:sigmap}
+& 
+\exists y_1 \in \{0,1\}^{q(|w|)}\ 
+\forall y_2 \in \{0,1\}^{q(|w|)}\
+\cdots \
+Q y_i \in \{0,1\}^{q(|w|)}\
+\cM \ \text{accepts}\ (w,y_1,\ldots,y_i) 
+&
+\end{eqnarray}
+where $Q = \exists$, if $i$ is odd and $Q=\forall$, if $i$ is even.
+
+
+The class $\pip {i}$ is defined as above, but the sequence of quantifiers in~(\ref{eq:sigmap}) starts with $\forall$.
+Alternatively, it can also be defined as
+$\pip {i} \defeq \{\overline{L} : L \in \sigmap {i}\}$.
+Note that $\npt = \sigmap {1}$ and $\conpt = \pip {1}$.
+
+\begin{remark}
+The class $\sigmap {i}$ can also be defined as follows.
+A language $L$ is in $\sigmap {i}$, if there is a polynomial time ATM $\cM$ that decides $L$ such that
+for every input word $w\in \{0,1\}^*$,
+the run of $\cM$ on $w$ can be divided into $i$ layers.
+Each layer consists of nodes of the same depth in the run.
+(Recall that the run of an ATM is a tree.)
+In the first layer all nodes are labeled with existential configurations,
+in the second layer with universal configurations, and so on.
+It is not difficult to show that this definition is equivalent to the one above.
+\end{remark}
+
+The {\em polynomial time hierarchy} (or, in short, {\em polynomial hierarchy}) is defined as the following class.
+\begin{eqnarray*}
+\pht & \defeq & \bigcup_{i=1}^{\infty} \ \sigmap {i}
+\end{eqnarray*}
+Note that $\pht \subseteq \ps$.
+
+It is conjectured that 
+$\sigmap {1}\ \subsetneq\ \sigmap {2}\ \subsetneq\ \sigmap {3} \ \subsetneq \ \cdots$.
+In this case, we say that {\em the polynomial hierarchy does not collapse}.
+We say that {\em the polynomial hierarchy collapses},
+if there is $i$ such that $\pht = \sigmap {i}$,
+in which case we also say that {\em the polynomial hierarchy collapses to level $i$}.
+
+
+We define the notion of hardness and completeness for each $\sigmap {i}$ as follows. 
+For $i\geq 1$, a language $K$ is {\em $\sigmap {i}$-hard}, if for every $L \in \sigmap {i}$, $L \leq_p K$. 
+It is {\em $\sigmap {i}$-complete}, if it is in $\sigmap {i}$ and it is $\sigmap {i}$-hard. 
+The same notion can be defined analoguously for $\pht$ and each $\pip {i}$.
+
+
+Define the language $\sigmasat {i}$ as consisting of true QBF of the form:
+\begin{eqnarray*}
+& & \exists \vx_1 \ \forall \vx_2 \ \cdots \ Q \vx_i\ \varphi(\vx_1,\ldots,\vx_i)
+\end{eqnarray*}
+where $\varphi(\vx_1,\ldots,\vx_i)$ is quantifier-free Boolean formula and $Q=\exists$, if $i$ is odd, and $Q=\forall$, if $i$ is even.
+Here $\vx_1,\ldots,\vx_i$ are all vectors of boolean variables.
+In other words, $\sigmasat {i}$ is a subset of $\tqbf$ where the number of quantifier alternation is limited to $(i-1)$.
+The language $\pisat {i}$ is defined analogously with the starting quantifiers being $\forall$.
+
+\begin{theorem}
+\label{theo:ph}~
+\begin{itemize}
+\item 
+For every $i\geq 1$,
+$\sigmasat {i}$ is $\sigmap {i}$-complete and $\pisat {i}$ is $\pip {i}$-complete.
+\item
+If $\sigmap {i} = \pip {i}$ for some $i\geq 1$, then the polynomial hierarchy collapses.
+\item
+If there is language that is $\pht$-complete, then the polynomial hierarchy collapses.
+\end{itemize}
+
+\end{theorem}
+
+
+
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+

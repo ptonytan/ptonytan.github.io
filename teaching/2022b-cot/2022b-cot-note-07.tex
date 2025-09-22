@@ -1,0 +1,490 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{../mysty}
+
+\renewcommand{\lesson}{7}
+\renewcommand{\lessontitle}{Boolean circuits}
+\renewcommand{\fulltitle}{Lesson \lesson: \lessontitle}
+
+\usepackage{xr}
+%\externaldocument{../lesson-04/2020b-toc-note-04}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% START DOCUMENT %%%%%%%%%%%%Let $\cH_{n,k}$ be a pairwise independent collection of hash functions $h:\{0,1\}^\to\{0,1\}^k$.%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\date{}
+
+
+%\thispagestyle{empty}
+
+\begin{center}
+{\Large {\bf \fulltitle}}
+\end{center}
+\vspace{0.5cm}
+
+\noindent
+{\bf Theme:} Some classical results on boolean circuits.
+
+
+
+\section{Some basics}
+
+
+Let $n\in \bbN$, where $n\geq 1$.
+An $n$-input {\em Boolean circuit} $C$ is a directed acyclic graph with
+$n$ {\em source} vertices (i.e., vertices with no incoming edges) and 
+$1$ {\em sink} vertex (i.e., vertex with no outgoing edge).
+
+The source vertices are labelled with $x_1,\ldots,x_n$.
+The non-source vertices, called {\em gates},
+are labelled with one of $\wedge, \vee,\neg$.
+The vertices labelled with $\wedge$ and $\vee$ have {\em two} incoming edges,
+whereas the vertices labelled with $\neg$ have one incoming edge.
+The size of $C$, denoted by $|C|$, is the number of vertices in $C$.
+
+On input $w = x_1\cdots x_n$, where each $x_i \in \{0,1\}$,
+we write $C(w)$ to denote the output of $C$ on $w$,
+where $\wedge,\vee,\neg$ are interpreted in the natural way
+and $0$ and $1$ as $\myF$ and $\myT$, respectively.
+
+We refer to the in-degree and out-degree of vertices in a circuit as {\em fan-in} and {\em fan-out}, respectively.
+In our definition above, we require fan-in 2.
+
+\begin{itemize}
+\item
+A circuit family is a sequence $\{C_n\}_{n\in \bbN}$ such that every $C_n$ has input $n$ inputs and a single output.
+
+To avoid clutter, we write $\{C_n\}$ to denote a circuit family.
+\item 
+We say that {\em $\{C_n\}$ decides a language $L$},
+if for every $n\in\bbN$, for every $w\in \{0,1\}^n$, $w\in L$ if and only if $C_n(w)=1$.
+
+\item
+We say that {\em $\{C_n\}$ is of size $T(n)$}, where $T:\bbN\to\bbN$ is a function,
+if $|C_n|\leq T(n)$, for every $n\in \bbN$.
+
+\end{itemize}
+We define the following class.
+\begin{eqnarray*}
+\ppoly & \defeq &
+\big\{L : L \ \text{is decided by}\ \{C_n\} \ \text{of size}\ q(n) \ \text{for some polynomial}\ q(n)\big\} 
+\end{eqnarray*}
+That is, the class of languages decided by a circuit family of polynomial size.
+
+\begin{remark}
+It is not difficult to show that {\em every} unary language $L$ is in $\ppoly$.
+Thus, $\ppoly$ contains some undecidable language.
+\end{remark}
+
+\begin{definition}
+\label{def:p-uniform}
+A circuit family $\{C_n\}$ is {\em $\pt$-uniform}, if there is a polynomial time DTM
+that on input $1^n$, output the description of the circuit $C_n$. 
+\end{definition}
+
+
+\begin{theorem}
+\label{theo:pt-p-uniform}
+A language $L$ is in $\pt$ if and only if
+it is decided by a $\pt$-uniform circuit family.
+\end{theorem}
+
+\begin{theorem}
+\label{theo:karp-lipton-circuit}
+{\bf (Karp and Lipton 1980)}
+If $\npt \subseteq \ppoly$, then $\pht=\sigmap{2}$. 
+\end{theorem}
+
+\begin{theorem}
+{\bf (Meyer 1980)}
+If $\expt \subseteq \ppoly$, then $\expt=\sigmap{2}$. 
+\end{theorem}
+
+\begin{theorem}
+{\bf (Shannon 1949)}
+For every $n>1$, there is a function $f:\{0,1\}^n\to \{0,1\}$ that
+cannot be computed by a circuit of size $2^n/(10n)$.
+\end{theorem}
+
+
+\paragraph*{The classes $\nc$ and $\ac$.}
+For a circuit $C$, the {\em depth} of $C$ is the length of the longest directed path
+from an input vertex to the output vertex.\footnote{Here we take the length of a path as the number of edges in it.}
+For a function $T:\bbN\to\bbN$, we say that a circuit family $\{C_n\}$ has depth $T(n)$,
+if for every $n$, the depth of $C_n$ is $\leq T(n)$.
+
+For every $i$, the classes $\nc^i$ and $\ac^i$ are defined as follows.
+\begin{itemize}
+\item 
+A language $L$ is in $\nc^i$, if there is $f(n)=\poly(n)$ such that 
+$L$ is decided by a circuit family of size $f(n)$ and depth $O(\log^i n)$.
+\item 
+The class $\ac^i$ is defined analogously, except that gates in the circuits are allowed to have unbounded fan-in.
+\end{itemize}
+The classes $\nc$ and $\ac$ are defined as follows.
+\begin{eqnarray*}
+\nc \ \defeq \ \bigcup_{i\geq 0}\ \nc^i
+&\hspace{1cm}\text{and}\hspace{1cm} &
+\ac \ \defeq \ \bigcup_{i\geq 0}\ \ac^i
+\end{eqnarray*}
+Note that $\nc^i \subseteq \ac^i \subseteq \nc^{i+1}$.
+
+
+\section{The switching lemma -- Decision tree version}
+
+
+This section is based on Sect.~13.1 in N. Immerman's textbook ``Descriptive Complexity'' (1998).
+See also P. Beame's note ``A switching lemma primer'' (1994).
+
+\subsection{Some useful notations and definitions}
+
+We will consider circuits with unbounded fan-in.
+We will often use the terms ``boolean formula'' and ``boolean function'' interchangeably.
+Recall that a literal is either a (boolean) variable or its negation.
+
+A {\em term} is a conjunction of some literals.
+The {\em length} of a term is the number of literals in~it.
+A {\em $k$-term} is a term of length $k$.
+A formula is a DNF formula if it is a disjunction of terms.
+It is $k$-DNF, if all its terms have length at most $k$.
+
+
+\paragraph*{Decision tree.}
+Let $F$ be a boolean function with variables $x_1,\ldots,x_n$.
+A {\em decision tree} of $F$ is a tree constructed inductively as follows.
+\begin{itemize}
+\item
+If $F$ already evaluates to a constant $0$ or $1$, 
+the decision tree has only one node labelled with $0$ or $1$, respectively.
+\item
+If $F$ is not a constant, its decision tree has a root with two children,
+where the left and right children are decision trees for $F[x_1\mapsto 0]$ and $F[x_1\mapsto 1]$, respectively.
+
+Here $F[x_1\mapsto b]$ denotes the resulting formula obtained by assigning $x_1$ with $b$.
+\end{itemize}
+Note that a decision tree depends on the ordering of the variables $x_1,\ldots,x_n$.
+
+\paragraph*{Canonical decision tree for DNF formulas.}
+Let $F = C_1\vee C_2 \vee \cdots \vee C_m$ be a DNF formula, i.e., each $C_i$ is a term.
+The {\em canonical decision tree} of $F$, denoted by $\cT(F)$, is the decision tree
+obtained with the variables being ordered as follows:
+All the variables in $C_1$ appear first, followed by all the variables in $C_2$ (which haven't appeared yet),
+and so on.
+Let $\depth(\cT(F))$ denote the depth of the canonical decision tree of~$F$.
+
+
+\paragraph*{Restriction.}
+Let $F$ be a formula with variables $x_1,\ldots,x_n$.
+A {\em restriction} (on $x_1,\ldots,x_n$) is a function $\rho: \{x_1,\ldots,x_n\}\to\{0,1,*\}$.
+Intuitively, $\rho(x_i)=*$ means variable $x_i$ is not assigned.
+We denote by $F|_{\rho}$ the resulting formula where we assign the variables in $F$ according to $\rho$.
+Note that if the formula $F$ is DNF,
+the formula $F|_{\rho}$ is also DNF.
+For $\ell \leq n$, $\cR^{\ell}_n$ denotes the set of restrictions (on $n$ variables)
+where exactly $\ell$ variables are unassigned.
+
+
+For two restrictions $\rho_1$ and $\rho_2$ whose sets of assigned variables are disjoint,
+we denote by $\rho_1\rho_2$ the restriction obtained by combining both restrictions.
+That is, for every variable $x$, if $x$ is assigned according to $\rho_1$ (or $\rho_2$),
+then $\rho_1\rho_2$ assigns $x$ according to $\rho_1$ (or $\rho_2$).
+
+
+
+\subsection{The switching lemma}
+
+
+\begin{lemma}
+\label{lem:switching-lemma}
+{\bf (Switching lemma -- H\r{a}stad 1986)}
+Let $F$ be a $k$-DNF formula with $n$ variables.
+For every $s\geq 0$ and every $p \leq 1/7$, the following holds.
+\begin{eqnarray}
+\label{eq:hastad}
+\frac{|\{\rho \in \cR^{pn}_n \ : \ \depth(\cT(F|_\rho))\geq s\}|}{|\cR^{pn}_n|}
+& < & (7pk)^s
+\end{eqnarray}
+\end{lemma}
+
+One can also write Eq.~(\ref{eq:hastad}) as $\pr_{\rho\in \cR^{pn}_n} [ \depth(\cT(F|_\rho))\geq s]  <  (7pk)^s$.
+Here $\pr_{\rho\in \cR^{pn}_n}[\cE]$ denotes the probability of event $\cE$ where $\rho$ is randomly chosen from $\cR^{pn}_n$.
+
+Let $\stars(k,s)$ be the set that contains a sequence $\vZ \defeq (Z_1,\ldots,Z_t)$
+where $\sum_{i=1}^t |Z_i|=s$ and each $Z_i$ is a non-empty subset of $\{1,\ldots,k\}$.
+When $s=0$, we define $\stars(k,s)$ to be $\{\varepsilon\}$,
+where $\varepsilon$ denotes the ``empty sequence''.
+That is, $|\stars(k,0)|=1$.
+
+
+\begin{lemma}
+\label{lem:stars}
+For every $k,s\geq 1$, $|\stars(k,s)|\leq \gamma^s$, where $\gamma$ is such that $(1+\frac{1}{\gamma})^k=2$.
+Hence, $|\stars(k,s)|< (k/\ln 2)^s$.
+\end{lemma}
+\begin{proof}
+The proof is by induction on $s$.
+Base case $s=0$ is trivial.
+
+For the induction hypothesis, we assume that the lemma holds for every $s'<s$.
+The induction step is as follows.
+Observe that if $Z_0$ is a non-empty subset of $\{1,\ldots,k\}$ and $\vZ \in \stars(k,s-|Z_0|)$,
+then $(Z_0,\vZ)\in\stars(k,s)$.
+From here, we have:
+\begin{eqnarray*}
+|\stars(k,s)| \ = \ \sum_{i=1}^{\min(k,s)} {k\choose i} |\stars(k,s-i)|
+& \leq & \sum_{i=1}^k {k\choose i} |\stars(k,s-i)|
+\\
+& \leq & \sum_{i=1}^k {k\choose i} \gamma^{s-i}
+\\
+& = & \gamma^s \sum_{i=1}^k {k\choose i} (1/\gamma)^i
+\\
+& = & \gamma^s \big( (1+1/\gamma)^k -1\big)
+\\
+& = & \gamma^s
+\end{eqnarray*}
+\end{proof}
+
+
+\paragraph*{Proof of Switching lemma:}
+Let $F$ be a $k$-DNF formula with $n$ variables.
+Let $s\geq 0$ and $p \leq 1/7$.
+Let $\ell = pn$.
+Let $X$ be the set of restrictions $\rho$ such that $\depth(\cT(F|_{\rho}))\geq s$.
+We will show that there is an injective function $\xi$:
+$$
+\xi \ :  X\ \to\ \cR^{\ell-s}\times \stars(k,s)\times \{0,1\}^s
+$$
+The existence of $\xi$ implies
+$|X|  \leq  |\cR^{\ell-s}|\cdot |\stars(k,s)|\cdot 2^s$
+and Switching lemma follows immediately from Lemma~\ref{lem:stars} and 
+the fact that $|\cR^{\ell}_n| = {n\choose \ell}2^{n-\ell}$.
+
+Let $F\defeq C_1\vee C_2\vee \cdots$, where each $C_i$ is a term of length at most $k$.
+Let $\rho \in X$, i.e., $\depth(\cT(F|_{\rho}))\geq s$.
+Consider the lexicographically first branch in $\cT(F|_{\rho})$ with length $\geq s$
+and let $b$ be the first $s$ steps in this branch.
+To define $\xi(\rho)$, we do the following.
+\begin{itemize}
+\item
+Let $C_{i_1}$ be the first term that is not set to 0 in $F|_{\rho}$.
+
+Let $V_1$ be the set of variables in $C_{i_1}|_{\rho}$.
+(Note that by the definition of the canonical decision tree, 
+this means the variables in $V_1$ are assigned at the beginning of $\cT(F|_{\rho})$.)
+
+Let $a_1$ be the (unique) assignment that makes $C_{i_1}|_{\rho}$ true. 
+
+Let $b_1$ be the ``initial'' assignment of $b$ that assigns variables in $V_1$.
+\\
+(If $b$ ends before all the variables in $V_1$ is used, let $b_1=b$
+and ``shorten'' $a_1$ so that both $a_1$ and $b_1$ assign the same set of variables.)
+
+Let $S_1\subseteq \{1,\ldots,k\}$ be the set of index $j$ where the $j^{\text{th}}$ variable in $C_{i_1}$
+is assigned by $a_1$.
+(Note that from the term $C_{i_1}$ and the set $S_1$, we can reconstruct $a_1$.)
+
+\item
+Repeat the above process but with $b\setminus b_1$, and we obtain $a_2$, $b_2$ and the set $S_2$,
+\end{itemize}
+Performing the process above, we obtain $a_1\cdots a_t$, $b_1\cdots b_t$ and $(S_1,\ldots,S_t)$.
+Note that $b=b_1\cdots b_t$.
+Let $a$ denote $a_1\cdots a_t$.
+Note also that the number of variables assigned by both $a$ and $b$ is exactly~$s$.
+Thus, the sum $|S_1|+\cdots+|S_t|=s$, and hence, $(S_1,\ldots,S_t)\in \stars(k,s)$.
+
+Let $\delta : \{1,\ldots,s\}\to \{0,1\}$ be a function defined as follows.
+\begin{eqnarray*}
+\delta(j) & \defeq & 
+\left\{
+\begin{array}{ll}
+1, & \text{if $a$ and $b$ assign the same value to the variable in the $j^{\text{th}}$ step}
+\\
+0, & \text{otherwise}
+\end{array}
+\right.
+\end{eqnarray*}
+Note that $\delta$ can be viewed as a 0-1 string of length $s$.
+
+Now we define the mapping $\xi$ as follows.
+\begin{eqnarray*}
+\xi (\rho) & \defeq & (\rho a, (S_1,\ldots,S_t),\delta)
+\end{eqnarray*}
+where $a$, $(S_1,\ldots,S_t)$ and $\delta$ are defined as above.
+
+We need to show that $\xi$ is injective.
+We will show that if $(\rho',(S_1,\ldots,S_t),\delta)$ is in the range of $\xi$,
+we can construct a unique $\rho$ such that $\xi(\rho)=\rho'$.
+Note that if $(\rho',(S_1,\ldots,S_t),\delta)$ is in the range of $\xi$,
+there is $a_1\cdots a_t$ such that $\rho'=\rho a$
+and $(S_1,\ldots,S_t)$ and $\delta$ satisfy the property imposed by the definition of $\xi$ above.
+Thus, to reconstruct $\rho$, it suffices to reconstruct $a_1\cdots a_t$.
+
+We denote $\rho'$ by $\rho a_1\cdots a_t$ for some $a_1\cdots a_t$ (which at this point is not known yet).
+We will construct $a_1,\ldots,a_t$ by doing the following.
+\begin{itemize}
+\item
+Find out the term $C_{i_1}$ which is
+the first term in $F$ that evaluates to $1$ under $\rho'$.
+
+From $C_{i_1}$ and $S_1$, we reconstruct $a_1$.
+
+From $a_1$ and $\delta$, we reconstruct $b_1$.
+\item
+Repeat the same process but replacing $\rho'$ with $(\rho'\setminus a_1)b_1$.
+(Here note that $(\rho'\setminus a_1)b_1$ is the same as $\rho b_1 a_2\cdots a_t$)
+
+From this step, we figure out $a_2$ and $b_2$.
+\end{itemize}
+We repeat the same process until we figure out all $a_1,\cdots,a_t$
+and hence the restriction $\rho$.
+This completes the proof of Lemma~\ref{lem:switching-lemma}.
+\QED
+
+\section{Applications of the switching lemma}
+
+By the equivalence $p_1\wedge \cdots \wedge p_m \equiv \neg (\neg p_1 \vee \cdots \vee \neg p_m)$,
+we can transform a circuit $C$ into another circuit $C'$ that uses only $\neg$ and $\vee$ gates.
+Moreover, $\depth(C')\leq 3\cdot \depth(C)$.
+In this section we always assume that circuits only use $\neg$ and $\vee$ gates.
+
+Note that every gate $g$ in a circuit defines a boolean formula.
+Abusing the notation, we will often treat every gate as a formula too.
+For every vertex $u$ in a circuit $C$, we define the height of $u$, denoted by $\height(u)$, as follows.
+\begin{itemize}
+\item
+The height of a source vertex (i.e., the input vertex) is $0$.
+\item 
+The height of a gate vertex $u$ is the maximum of $\height(v)+1$,
+where $v$ ranges over all edges $(u,v)$ in $C$.
+\end{itemize}
+So, a circuit of depth $d$ has vertices of height from $0$ to $d$.
+
+In the following, $\log$ has base $2$.
+\begin{lemma}
+\label{lem:depth-size-circuit}
+Let $C$ be a circuit with $n$ variables, size $m$ and depth $d$.
+For every $1\leq j \leq d$, let $n_j  \defeq  \frac{n}{14(14 \log m)^{j-1}}$.
+Assume that $\log m > 1$.
+Then, the following holds.
+
+For every $1\leq j \leq d$, there is a restriction $\rho_j \in \cR^{n_j}_n$ such that
+for every gate $f$ of height $j$ in~$C$, 
+the formula $f|_{\rho_j}$ has a decision tree with height $< \log m$.  
+\end{lemma}
+\begin{proof}
+The proof is by induction on $j$.
+The base case is $j=1$, where $n_1\defeq n/14$.
+We randomly choose (with equal probability) a restriction $\rho$ from $\cR^{n_1}_n$.
+For a gate $f$ of height 1,
+let $\cE_f$ denote the event that ``$\depth(\cT(f|_{\rho}))\geq \log m$.''
+Let $\cE$ denote the event that ``there is a gate $f$ of height $1$ such that $\depth(\cT(f|_{\rho}))\geq \log m$.''
+
+We will first show that $\pr_{\rho\in \cR^{n_1}_n} [\cE_f] < 1/m$, for every gate $f$ of height $1$.
+Let $f$ be a gate of height $1$.
+If $f$ is a $\neg$-gate, then the depth of its decision tree is $1$.
+Since $\log m > 1$, we have:
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_1}_n} [ \cE_f] & = & 0 \ < \ 1/m
+\end{eqnarray*}
+If $f$ is an $\vee$-gate, we can view $f$ as 1-DNF, i.e., every term has length $1$.
+By Lemma~\ref{lem:switching-lemma} where $p=1/14$, $k=1$ and $s=\log m$,
+we have:
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_1}_n} [\cE_f] & < &  (7 \cdot (1/14) \cdot 1)^{\log m}
+\ = \ (1/2)^{\log m} \ = \ 1/m 
+\end{eqnarray*}
+Then, 
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_1}_n} [\cE] & = & \pr_{\rho\in \cR^{n_1}_n} \Big[\bigcup_{f\ \text{has height}\ 1} \cE_f\Big]
+\ \leq \ \sum_{f\ \text{has height}\ 1} \pr_{\rho\in \cR^{n_1}_n} [ \cE_f]
+\ < \ m\cdot (1/m) \ = \ 1
+\end{eqnarray*}
+This means $\pr_{\rho\in \cR^{n_1}_n} [\overline{\cE}]> 0$,
+which means there is a restriction $\rho \in \cR^{n_1}_n$ such that for all gate $f$ of height $1$,
+$\depth(\cT(f|_{\rho}))<\log m$, i.e.,
+$f|_{\rho}$ has a decision tree with depth $< \log m$.
+
+
+For the induction hypothesis,
+we assume Lemma~\ref{lem:depth-size-circuit} holds for $j-1$.
+Let  $\rho_0 \in \cR^{n_{j-1}}_n$ be a restriction such that
+every gate $g$ of height $j-1$ has decision tree with depth $< \log m$.
+Applying $\rho_0$ on all gates of height $j-1$,
+we can view each gate of height $j-1$ as DNF where each term has length $< \log m$.
+
+Similar to above,
+we randomly choose a restriction $\rho$ from $\cR^{n_j}_{n_{j-1}}$. 
+For a gate $f$ of height $j$,
+let $\cE_f'$ denote the event that ``every decision tree of $f|_{\rho_0\rho}$ has depth $\geq \log m$.''
+Let $\cE'$ denote the event that ``there is a gate $f$ of height $j$ such that every decision tree of $f|_{\rho_0\rho}$ has depth $\geq \log m$.''
+
+We will show that $\pr_{\rho\in \cR^{n_j}_{n_{j-1}}} [\cE_f'] < 1/m$, for every gate $f$ of height $j$.
+Let $f$ be a gate of height $j$.
+If $f$ is a $\neg$-gate, let $f= \neg g$, where $g$ is of height $j-1$.
+Since $g|_{\rho_0}$ has decision tree with depth $<\log m$, so does $f|_{\rho_0}$.
+Thus,
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_j}_{n_{j-1}}}[\cE_f'] & = & 0 \ < \ 1/m
+\end{eqnarray*}
+If $f$ is an $\vee$-gate, we can view $f$ as $k$-DNF, where $k=\log m$.
+By Lemma~\ref{lem:switching-lemma} with $p=1/(14\log m)$, $k=\log m$ and $s=\log m$,
+we have:
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_j}_{n_{j-1}}}[\depth(\cT(f|_{\rho_0\rho}))\geq \log m] & < &  (7 \cdot \frac{1}{14 \log m} \cdot \log m)^{\log m}
+\ = \ (1/2)^{\log m} \ = \ 1/m 
+\end{eqnarray*}
+Now, note that: 
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_j}_{n_{j-1}}} [\cE_f'] & \leq & \pr_{\rho\in \cR^{n_j}_{n_{j-1}}}[\depth(\cT(f|_{\rho_0\rho}))\geq \log m] 
+\end{eqnarray*}
+Thus, 
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_j}_{n_{j-1}}} [\cE_f'] & < & 1/m
+\end{eqnarray*}
+Applying similar argument as above, we obtain:
+\begin{eqnarray*}
+\pr_{\rho\in \cR^{n_j}_{n_{j-1}}}[\cE'] & < & 1
+\end{eqnarray*}
+Hence, there is a restriction $\rho \in  \cR^{n_j}_{n_{j-1}}$ such that 
+for every gate $f$ of height $j$, $f|_{\rho_0\rho}$ has a decision tree with depth $< \log m$.
+Now, $\rho_0\rho \in \cR^{n_j}_n$.
+This completes the proof of Lemma~\ref{lem:depth-size-circuit}.
+\end{proof}
+
+
+Consider the following language $\parity \subseteq \{0,1\}^*$.
+\begin{eqnarray*}
+\parity & \defeq & \{w: \text{the number of 1's in}\ w \ \text{is odd}\}
+\end{eqnarray*}
+Obviously, it can be viewed as a family of boolean functions $\{f_n\}_{n\in\bbN}$,
+where each $f_n$ has $n$ variables $x_1,\ldots,x_n$ and $f_n(x_1,\ldots,x_n) \defeq \sum_{i=1}^n x_i \pmod 2$.
+
+
+Applying Lemma~\ref{lem:depth-size-circuit}, we immediately obtain that $\parity$ is not in $\ac^0$.
+
+\begin{theorem}
+\label{theo:parity}
+{\bf (Furst, Saxe and Sipser 1981, Ajtai 1983, Yao 1985)}
+$\parity \notin \ac^0$.
+\end{theorem}
+
+
+
+
+
+
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
