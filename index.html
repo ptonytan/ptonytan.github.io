@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+    body {
+      margin-left: 30px;}
+	  li::marker {
+    color: #000000; /* Sets bullet to solid black */
+    font-weight: bold; /* Makes it appear thicker/darker */
+  }
+
+
+</style>
 <meta charset="utf-8" />
 <title> Tony Tan's webpage</title>
 </head>
@@ -8,21 +18,14 @@
 <body>
 
 <br>
-</br>
 
-<HR>
-<br>
-
-<TABLE CELLPADDING=0 CELLSPACING=0>
-<TD>&nbsp;&nbsp;</TD>
-	
-<TD>Tony Tan
+Tony Tan
 <br>Lecturer
 <br><a href="https://www.csc.liv.ac.uk/" target ="blank">School of Computer Science and Informatics</a>
 <br><a href="http://www.liverpool.ac.uk" target ="blank">University of Liverpool</a>
 <br>Liverpool, England, UK
 
-<br><br>
+<p></p>
 
 <b>Room:</b> George Holt Building, Room 2.16
 <br>
@@ -30,57 +33,39 @@
 <br></br>
 <b>Office hour:</b> Drop by my office or make an appointment via email
 
-</TD>
-</TABLE>
+<br><br>
+
+<b>Teaching:</b> COMP 702 (MSc dissertations co-ordinator), COMP 221 (Planning your career)
+
+<br><br>
+
+<b>Research:</b>
+<ul style="line-height:1.2;">
+<li>Succinct SAT and DQBF and applications</li>
+<li>Logic in computer science and applications</li>
+<li>The github account for codes and papers on DQBF: <a href="https://github.com/Sat-DQBF">https://github.com/Sat-DQBF</a></li>	
+</ul>
 
 <br>
 
-<TABLE CELLPADDING=0 CELLSPACING=0>
-	<TD>
-	&nbsp;&nbsp;
-	</TD>
+<b>Recent publications:</b>
+(For <a href="./research/research.html">full list</a> or <a href="https://dblp.org/pid/69/159.html">dblp list</a>)
 
-	<td>
-	<b>Teaching:</b> COMP 702 (MSc dissertations co-ordinator), COMP 221 (Planning your career)
-	</td>
-</TABLE>
-
-	<br>
-
-<TABLE CELLPADDING=0 CELLSPACING=0>
-	<TD>
-	&nbsp;&nbsp;
-	</TD>
-
-	<TD>
-	    <b>Research:</b>
-	    <ul style="line-height:1.2;">
-		<li>Succinct SAT and DQBF and applications</li>
-	    <li>Logic in computer science and applications</li>
-		<li>The github account for codes and papers on DQBF: <a href="https://github.com/Sat-DQBF">https://github.com/Sat-DQBF</a></li>	
-	    </ul>
-			</TD>
-</TABLE>
-
-
-	<br>
-
+<ul><li>
+<i>Robustness Verification of Graph Neural Networks Via Lightweight Satisfiability Testing</i>
+<br>Chia-Hsuan Lu, Tony Tan and Michael Benedikt
+<br>To appear in the proceedings of TACAS 2026
+<br><a href="https://arxiv.org/abs/2510.18591">https://arxiv.org/abs/2510.18591</a>
+</li></ul>
 	
-<TABLE CELLPADDING=0 CELLSPACING=0>
 
-	<TD>
-	&nbsp;&nbsp;
-	</TD>
-
-	
-	<TD>
-	<b>Recent publicatins:</b>
-	(<a href="./research/research.html">full list</a>, <a href="https://dblp.org/pid/69/159.html">dblp list</a>)
-
-<ul><li><i>Model Counting for Dependency Quantified Boolean Formulas</i>
+<ul><li>
+<i>Model Counting for Dependency Quantified Boolean Formulas</i>
 (<a href="2026-sharp-2dqbf.pdf">pdf</a>)
 <br>Long-Hin Fung, Che Cheng, Jie-Hong Roland Jiang, Friedrich Slivovsky, Tony Tan
-<br>To appear in the Proceedings of AAAI 2026
+<br>To appear in the proceedings of AAAI 2026
+<br><a href="https://arxiv.org/abs/2511.07337">https://arxiv.org/abs/2511.07337</a>
+<br><a href="https://github.com/Sat-DQBF/sharp2DQR">https://github.com/Sat-DQBF/sharp2DQR</a>
 </li></ul>
 
 <ul><li>
@@ -110,7 +95,8 @@
 <ul><li>
 <i>Separation and Definability in Fragments of Two-Variable First-Order Logic with Counting</i>
 <br>Louwe Kuijer, Tony Tan, Frank Wolter, Michael Zakharyaschev
-<br>Proceedings of LICS 2025 (an extended abstact also appears in DL 2024)
+<br>Proceedings of LICS 2025 (an extended abstract also appears in DL 2024)
+<br><a href="https://arxiv.org/abs/2504.20491">https://arxiv.org/abs/2504.20491</a>
 </li></ul>
 
 <ul><li>
@@ -125,7 +111,9 @@
 (<a href="2024-solving-2dqbf.pdf">pdf</a>)
 <br>Long-Hin Fung, Che Cheng, Yu-Wei Fan, Tony Tan, Jie-Hong Roland Jiang
 <br>Proceedings of FMCAD 2024 <b>(best paper award)</b>
-<br>Invited and submitted to <i>Formal Methods in System Designs</i></li></ul>
+<br>Invited and submitted to <i>Formal Methods in System Designs</i>
+<br><a href="https://github.com/Sat-DQBF/2DQR-using-ABC">https://github.com/Sat-DQBF/2DQR-using-ABC</a>
+</li></ul>
 
 <ul><li><i>On two-variable guarded fragment logic with expressive local Presburger constraints</i>
 (<a href="2024-gen-sat-gp2.pdf">pdf</a>)
@@ -134,7 +122,7 @@
 <br><a href="https://arxiv.org/abs/2206.13731">https://arxiv.org/abs/2206.13731</a>
 </li></ul>
 
-<ul><li><<i>On the Complexity of k-DQBF</i>
+<ul><li><i>On the Complexity of k-DQBF</i>
 (<a href="2023-k-dqbf.pdf">pdf</a>)
 <br>Long-Hin Fung, Tony Tan
 <br>Proceedings of SAT 2023
@@ -173,13 +161,8 @@
 <br><i>Acta Informatica</i> 58(1): 35-56 (2021)
 </li></ul>
 
-</TD>
-</TABLE>
-
-	
 <br>
-<HR>
-
-
-
+(End of page)
+</body>
 </html>
+
